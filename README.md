@@ -1,52 +1,51 @@
 
-
 # CivicNavigator – Frontend
 
-This is the **React + TypeScript + Vite** frontend for the **CivicNavigator** platform.
-It provides a responsive, modern interface for residents and staff to:
+The **CivicNavigator** frontend is a **React + TypeScript + Vite** application providing a responsive, accessible interface for residents and staff to interact with municipal services.
+It allows residents to chat with an AI-powered assistant, submit incident reports, and track their progress — while giving staff tools to triage incidents and manage the municipal knowledge base.
 
-* Chat with the CivicNavigator AI.
-* Report and track incidents.
-* View dashboards and demographic insights.
-* Manage the knowledge base.
+This repository contains only the **frontend web application**. For the backend API and AI services, see the [CivicNavigator Backend](https://github.com/CivicIWL/CivicIWL_Backend).
 
 ---
 
 ## 📦 Tech Stack
 
-* **React 18** with **TypeScript**
-* **Vite** for fast dev/build
-* **TailwindCSS** for styling
-* **shadcn/ui** for components
-* **Recharts** for charts
-* **react-hook-form** for forms
-* **SWR** for data fetching
+* **React 18** + **TypeScript** — modular, type-safe components
+* **Vite** — fast builds and hot module reloads
+* **TailwindCSS** — responsive, utility-first styling
+* **shadcn/ui** — accessible UI components
+* **Recharts** — data visualization for staff dashboards
+* **react-hook-form** — form state management and validation
+* **SWR** — client-side caching and revalidation
+* **WebSocket** — real-time updates for incident status
 
 ---
 
 ## 🚀 Getting Started
 
-### 1️⃣ Prerequisites
+### Prerequisites
 
 * Node.js ≥ 18.x
 * npm ≥ 9.x (or yarn/pnpm)
-* Backend API for CivicNavigator running locally or hosted.
+* Access to the CivicNavigator Backend API
+* Seeded Knowledge Base (80–200 documents; see backend repo)
+* Modern browser (Chrome/Firefox/Edge)
 
 ---
 
-### 2️⃣ Installation
+### Installation
 
 ```bash
-git clone https://github.com/<your-org>/civicnavigator-frontend.git
-cd civicnavigator-frontend
+git clone https://github.com/CivicIWL/CivicIWL_Frontend.git
+cd CivicIWL_Frontend
 npm install
 ```
 
 ---
 
-### 3️⃣ Environment Variables
+### Environment Variables
 
-Copy `.env.example` to `.env.local` and configure:
+Copy `.env.example` → `.env.local` and configure:
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000
@@ -54,116 +53,110 @@ VITE_WS_URL=ws://localhost:8000/ws
 VITE_AI_HEALTHCHECK_URL=http://localhost:8000/ai/health
 ```
 
-> Keep `.env.local` out of version control.
+> **Note:** `.env.local` should not be committed.
 
 ---
 
-### 4️⃣ Development
+### Development
 
 ```bash
 npm run dev
 ```
 
-Open **[http://localhost:5173](http://localhost:5173)**
+Open [http://localhost:5173](http://localhost:5173).
 
 ---
 
-### 5️⃣ Production Build
+### Production Build & Preview
 
 ```bash
 npm run build
 npm run preview
 ```
 
+Build output is in `dist/`.
+
 ---
 
 ## 🖥 Features
 
-* **Resident Chatbot** – Natural conversation with AI, citations included.
-* **Incident Reporting** – Submit incident forms with optional attachments.
-* **Status Tracking** – Look up incident progress by ID.
-* **Staff Dashboard** – View, filter, and update incidents.
-* **Demographic Insights** – View charts and reports.
+### For Residents
+
+* **AI Chatbot** — conversational Q\&A with citations and clarifications
+* **Incident Reporting** — submit detailed reports with optional images
+* **Status Tracking** — check progress with reference ID
+* **Live Notifications** — updates via WebSocket
+
+### For Staff
+
+* **Incident Triage** — filter, review, and update cases
+* **Knowledge Base Management** — add/update/reindex KB articles
+* **Audit Logs** — track changes for accountability
 
 ---
 
-## 📜 Linting & Code Quality
+## 🧪 Testing
 
-The project is configured with ESLint and TypeScript lint rules.
+* **Unit Tests** — for components and hooks
+* **Integration Tests** — API/WebSocket interactions
+* **E2E Tests** — resident/staff workflows
+* **Accessibility Tests** — ARIA/contrast compliance
+* **Performance Tests** — latency for chat & incident actions
 
-To expand the ESLint configuration for type-aware linting:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      ...tseslint.configs.recommendedTypeChecked,
-      // Or stricter:
-      // ...tseslint.configs.strictTypeChecked,
-      // Optionally stylistic:
-      // ...tseslint.configs.stylisticTypeChecked,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-])
-```
-
-Optional plugins for React-specific rules:
-
-```js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      reactX.configs['recommended-typescript'],
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-])
-```
-
-Run lint:
+Run:
 
 ```bash
-npm run lint
+npm run test
+npm run test:e2e
+npm run test:a11y
 ```
+
+---
+
+## 📊 Observability
+
+* **Logs** — structured console output
+* **Metrics** — request/latency counters (optional Prometheus)
+* **Health Checks** — ping AI readiness endpoint
+* **Troubleshooting** — trace requests via IDs in logs
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions:
+
+1. Fork the repo & branch:
+
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+2. Follow ESLint/Prettier formatting
+3. Write tests for new features
+4. Open a PR with description & test steps
+5. Address code review feedback
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## 📜 Scripts
 
 ```bash
-npm run dev         # Start dev server
-npm run build       # Production build
-npm run preview     # Preview production build
-npm run lint        # Run linter
-npm run format      # Format with Prettier
+npm run dev       # Start dev server
+npm run build     # Production build
+npm run preview   # Preview build
+npm run lint      # Lint with ESLint
+npm run format    # Format with Prettier
+npm run test      # Unit & integration tests
+npm run test:e2e  # End-to-end tests
+npm run test:a11y # Accessibility tests
 ```
 
 ---
 
 ## 📄 License
 
-MIT License – see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE).
 
 ---
-
-If you want, I can also **add a “Contributing” section** so the README works for open-source and team onboarding. That way, both your **frontend and backend** READMEs match in style and structure.
-Do you want me to add that?
