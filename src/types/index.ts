@@ -1,35 +1,16 @@
-// Add missing Page and StaffPage types
-export type Page =
-  | "login"
-  | "signup"
-  | "dashboard"
-  | "profile"
-  | "report"
-  | "staff"
-  | "chatbot"
-  | "incidents";
-export type StaffPage =
-  | "dashboard"
-  | "staff-dashboard"
-  | "incidents"
-  | "staff-incidents"
-  | "knowledgebase"
-  | "staff-knowledge"
-  | "settings"
-  | "users";
-//types/index.ts
+// frontend/src/types/index.ts
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: "resident" | "staff" | "admin";
+  role: 'resident' | 'staff' | 'admin';
   createdAt?: string;
   lastActive?: string;
 }
 
 export interface ChatMessage {
   id: string;
-  type: "user" | "ai";
+  type: 'user' | 'ai';
   content: string;
   timestamp: Date;
   citations?: Citation[];
@@ -57,7 +38,7 @@ export interface Incident {
   description: string;
   category: string;
   location: string;
-  status: "NEW" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+  status: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
   submittedOn: string;
   lastUpdated: string;
   contactInfo?: string;
@@ -72,7 +53,7 @@ export interface KBArticle {
   content: string;
   category: string;
   tags: string[];
-  status: "draft" | "published";
+  status: 'draft' | 'published';
   author: string;
   createdAt: string;
   updatedAt: string;

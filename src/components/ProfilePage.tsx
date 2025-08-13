@@ -1,29 +1,12 @@
-import React, { useState } from "react";
-import { Layout } from "./Layout";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Separator } from "./ui/separator";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  MessageSquare,
-  AlertTriangle,
-  Calendar,
-  Edit,
-  Save,
-  X,
-} from "lucide-react";
-import { toast } from "sonner";
+import React, { useState } from 'react';
+import { Layout } from './Layout';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Separator } from './ui/separator';
+import { User, Mail, Phone, MapPin, MessageSquare, AlertTriangle, Calendar, Edit, Save, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 type User = {
   id: string;
@@ -31,13 +14,7 @@ type User = {
   email: string;
 };
 
-type Page =
-  | "login"
-  | "signup"
-  | "dashboard"
-  | "chatbot"
-  | "incidents"
-  | "profile";
+type Page = 'login' | 'signup' | 'dashboard' | 'chatbot' | 'incidents' | 'profile';
 
 interface ProfilePageProps {
   user: User;
@@ -50,8 +27,8 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
   const [profileData, setProfileData] = useState({
     name: user.name,
     email: user.email,
-    phone: "+1 (555) 123-4567",
-    address: "123 Main Street, Cityville, ST 12345",
+    phone: '+1 (555) 123-4567',
+    address: '123 Main Street, Cityville, ST 12345',
   });
 
   const [editData, setEditData] = useState(profileData);
@@ -59,7 +36,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
   const handleSave = () => {
     setProfileData(editData);
     setIsEditing(false);
-    toast.success("Profile updated successfully!");
+    toast.success('Profile updated successfully!');
   };
 
   const handleCancel = () => {
@@ -68,50 +45,27 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
   };
 
   const accountStats = [
-    { label: "Member Since", value: "January 2024", icon: Calendar },
-    { label: "Active Chats", value: "12", icon: MessageSquare },
-    { label: "Reports Submitted", value: "7", icon: AlertTriangle },
-    { label: "Community Score", value: "92%", icon: User },
+    { label: 'Member Since', value: 'January 2024', icon: Calendar },
+    { label: 'Active Chats', value: '12', icon: MessageSquare },
+    { label: 'Reports Submitted', value: '7', icon: AlertTriangle },
+    { label: 'Community Score', value: '92%', icon: User },
   ];
 
   const recentActivity = [
-    {
-      type: "chat",
-      title: "Started chat about voting registration",
-      date: "2024-01-18",
-    },
-    {
-      type: "incident",
-      title: "Reported broken streetlight",
-      date: "2024-01-15",
-    },
-    {
-      type: "chat",
-      title: "Asked about property tax deadlines",
-      date: "2024-01-12",
-    },
-    {
-      type: "incident",
-      title: "Reported pothole on Main St",
-      date: "2024-01-10",
-    },
+    { type: 'chat', title: 'Started chat about voting registration', date: '2024-01-18' },
+    { type: 'incident', title: 'Reported broken streetlight', date: '2024-01-15' },
+    { type: 'chat', title: 'Asked about property tax deadlines', date: '2024-01-12' },
+    { type: 'incident', title: 'Reported pothole on Main St', date: '2024-01-10' },
   ];
 
   return (
-    <Layout
-      user={user}
-      currentPage="profile"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-    >
+    <Layout user={user} currentPage="profile" onNavigate={onNavigate} onLogout={onLogout}>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl text-slate-900">Profile</h1>
-            <p className="text-slate-600">
-              Manage your account information and preferences
-            </p>
+            <p className="text-slate-600">Manage your account information and preferences</p>
           </div>
         </div>
 
@@ -124,33 +78,20 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>Personal Information</CardTitle>
-                    <CardDescription>
-                      Update your personal details and contact information
-                    </CardDescription>
+                    <CardDescription>Update your personal details and contact information</CardDescription>
                   </div>
                   {!isEditing ? (
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsEditing(true)}
-                    >
+                    <Button variant="outline" onClick={() => setIsEditing(true)}>
                       <Edit className="h-4 w-4 mr-2" />
                       Edit
                     </Button>
                   ) : (
                     <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancel}
-                      >
+                      <Button variant="outline" size="sm" onClick={handleCancel}>
                         <X className="h-4 w-4 mr-2" />
                         Cancel
                       </Button>
-                      <Button
-                        size="sm"
-                        onClick={handleSave}
-                        className="bg-blue-600 hover:bg-blue-700"
-                      >
+                      <Button size="sm" onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
                         <Save className="h-4 w-4 mr-2" />
                         Save
                       </Button>
@@ -166,9 +107,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                       <Input
                         id="name"
                         value={editData.name}
-                        onChange={(e) =>
-                          setEditData({ ...editData, name: e.target.value })
-                        }
+                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                       />
                     ) : (
                       <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
@@ -184,9 +123,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                         id="email"
                         type="email"
                         value={editData.email}
-                        onChange={(e) =>
-                          setEditData({ ...editData, email: e.target.value })
-                        }
+                        onChange={(e) => setEditData({ ...editData, email: e.target.value })}
                       />
                     ) : (
                       <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
@@ -201,9 +138,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                       <Input
                         id="phone"
                         value={editData.phone}
-                        onChange={(e) =>
-                          setEditData({ ...editData, phone: e.target.value })
-                        }
+                        onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                       />
                     ) : (
                       <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
@@ -218,9 +153,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                       <Input
                         id="address"
                         value={editData.address}
-                        onChange={(e) =>
-                          setEditData({ ...editData, address: e.target.value })
-                        }
+                        onChange={(e) => setEditData({ ...editData, address: e.target.value })}
                       />
                     ) : (
                       <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
@@ -237,59 +170,36 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Your latest interactions and submissions
-                </CardDescription>
+                <CardDescription>Your latest interactions and submissions</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-3 p-3 bg-slate-50 rounded-[3rem]"
-                    >
-                      <div
-                        className={`p-2 rounded-full ${
-                          activity.type === "chat"
-                            ? "bg-blue-100"
-                            : "bg-orange-100"
-                        }`}
-                      >
-                        {activity.type === "chat" ? (
-                          <MessageSquare
-                            className={`h-4 w-4 ${
-                              activity.type === "chat"
-                                ? "text-blue-600"
-                                : "text-orange-600"
-                            }`}
-                          />
+                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-[3rem]">
+                      <div className={`p-2 rounded-full ${
+                        activity.type === 'chat' ? 'bg-blue-100' : 'bg-orange-100'
+                      }`}>
+                        {activity.type === 'chat' ? (
+                          <MessageSquare className={`h-4 w-4 ${
+                            activity.type === 'chat' ? 'text-blue-600' : 'text-orange-600'
+                          }`} />
                         ) : (
                           <AlertTriangle className="h-4 w-4 text-orange-600" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm text-slate-900">
-                          {activity.title}
-                        </p>
-                        <p className="text-xs text-slate-600">
-                          {activity.date}
-                        </p>
+                        <p className="text-sm text-slate-900">{activity.title}</p>
+                        <p className="text-xs text-slate-600">{activity.date}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <Separator className="my-4" />
                 <div className="grid grid-cols-2 gap-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => onNavigate("chatbot")}
-                  >
+                  <Button variant="outline" onClick={() => onNavigate('chatbot')}>
                     View All Chats
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => onNavigate("incidents")}
-                  >
+                  <Button variant="outline" onClick={() => onNavigate('incidents')}>
                     View All Reports
                   </Button>
                 </div>
@@ -308,19 +218,12 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                 {accountStats.map((stat, index) => {
                   const Icon = stat.icon;
                   return (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between"
-                    >
+                    <div key={index} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 text-slate-400" />
-                        <span className="text-sm text-slate-600">
-                          {stat.label}
-                        </span>
+                        <span className="text-sm text-slate-600">{stat.label}</span>
                       </div>
-                      <span className="text-sm text-slate-900">
-                        {stat.value}
-                      </span>
+                      <span className="text-sm text-slate-900">{stat.value}</span>
                     </div>
                   );
                 })}
@@ -333,25 +236,25 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button
-                  variant="outline"
+                <Button 
+                  variant="outline" 
                   className="w-full justify-start"
-                  onClick={() => onNavigate("chatbot")}
+                  onClick={() => onNavigate('chatbot')}
                 >
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Start New Chat
                 </Button>
-                <Button
-                  variant="outline"
+                <Button 
+                  variant="outline" 
                   className="w-full justify-start"
-                  onClick={() => onNavigate("incidents")}
+                  onClick={() => onNavigate('incidents')}
                 >
                   <AlertTriangle className="h-4 w-4 mr-2" />
                   Report Issue
                 </Button>
                 <Separator />
-                <Button
-                  variant="destructive"
+                <Button 
+                  variant="destructive" 
                   className="w-full justify-start"
                   onClick={onLogout}
                 >

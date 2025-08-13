@@ -1,36 +1,21 @@
-import React, { useState } from "react";
-import {
-  Save,
-  Bell,
-  Shield,
-  Settings2,
-  Database,
-  Mail,
-  Globe,
-  Users,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Textarea } from "./ui/textarea";
-import { Separator } from "./ui/separator";
-import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import React, { useState } from 'react';
+import { Save, Bell, Shield, Settings2, Database, Mail, Globe, Users } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Switch } from './ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Textarea } from './ui/textarea';
+import { Separator } from './ui/separator';
+import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: "resident" | "staff" | "admin";
+  role: 'resident' | 'staff' | 'admin';
 };
 
 interface StaffSettingsPageProps {
@@ -38,23 +23,17 @@ interface StaffSettingsPageProps {
 }
 
 export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
-  const [activeTab, setActiveTab] = useState("system");
+  const [activeTab, setActiveTab] = useState('system');
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-medium text-slate-900">Settings</h1>
-        <p className="text-slate-600">
-          Manage system configuration and preferences
-        </p>
+        <p className="text-slate-600">Manage system configuration and preferences</p>
       </div>
 
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-6"
-      >
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="system">System</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -85,7 +64,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
 
               <div>
                 <Label>System Description</Label>
-                <Textarea
+                <Textarea 
                   defaultValue="Civic assistant platform for Springfield residents to report incidents and access city services."
                   rows={3}
                 />
@@ -99,18 +78,10 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="america/new_york">
-                        Eastern Time
-                      </SelectItem>
-                      <SelectItem value="america/chicago">
-                        Central Time
-                      </SelectItem>
-                      <SelectItem value="america/denver">
-                        Mountain Time
-                      </SelectItem>
-                      <SelectItem value="america/los_angeles">
-                        Pacific Time
-                      </SelectItem>
+                      <SelectItem value="america/new_york">Eastern Time</SelectItem>
+                      <SelectItem value="america/chicago">Central Time</SelectItem>
+                      <SelectItem value="america/denver">Mountain Time</SelectItem>
+                      <SelectItem value="america/los_angeles">Pacific Time</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -149,7 +120,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <Badge variant="secondary">Environment</Badge>
                 <Badge variant="secondary">Utilities</Badge>
               </div>
-
+              
               <div className="flex gap-2">
                 <Input placeholder="Add new category..." />
                 <Button variant="outline">Add</Button>
@@ -171,12 +142,10 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch defaultChecked />
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="ghost" size="sm">Edit</Button>
                   </div>
                 </div>
-
+                
                 <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -184,12 +153,10 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch defaultChecked />
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="ghost" size="sm">Edit</Button>
                   </div>
                 </div>
-
+                
                 <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -197,12 +164,10 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch defaultChecked />
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="ghost" size="sm">Edit</Button>
                   </div>
                 </div>
-
+                
                 <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
@@ -210,9 +175,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch defaultChecked />
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="ghost" size="sm">Edit</Button>
                   </div>
                 </div>
               </div>
@@ -234,45 +197,37 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>New Incident Notifications</Label>
-                    <p className="text-sm text-slate-600">
-                      Notify staff when new incidents are reported
-                    </p>
+                    <p className="text-sm text-slate-600">Notify staff when new incidents are reported</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Assignment Notifications</Label>
-                    <p className="text-sm text-slate-600">
-                      Notify staff when incidents are assigned to them
-                    </p>
+                    <p className="text-sm text-slate-600">Notify staff when incidents are assigned to them</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Status Update Notifications</Label>
-                    <p className="text-sm text-slate-600">
-                      Notify residents when incident status changes
-                    </p>
+                    <p className="text-sm text-slate-600">Notify residents when incident status changes</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Weekly Summary Reports</Label>
-                    <p className="text-sm text-slate-600">
-                      Send weekly incident summary to administrators
-                    </p>
+                    <p className="text-sm text-slate-600">Send weekly incident summary to administrators</p>
                   </div>
                   <Switch />
                 </div>
@@ -324,21 +279,17 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Two-Factor Authentication</Label>
-                    <p className="text-sm text-slate-600">
-                      Require 2FA for all staff accounts
-                    </p>
+                    <p className="text-sm text-slate-600">Require 2FA for all staff accounts</p>
                   </div>
                   <Switch />
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Session Timeout</Label>
-                    <p className="text-sm text-slate-600">
-                      Automatically log out inactive users
-                    </p>
+                    <p className="text-sm text-slate-600">Automatically log out inactive users</p>
                   </div>
                   <Select defaultValue="30">
                     <SelectTrigger className="w-32">
@@ -352,27 +303,23 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                     </SelectContent>
                   </Select>
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Password Requirements</Label>
-                    <p className="text-sm text-slate-600">
-                      Enforce strong password policy
-                    </p>
+                    <p className="text-sm text-slate-600">Enforce strong password policy</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-
+                
                 <Separator />
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Login Attempt Limit</Label>
-                    <p className="text-sm text-slate-600">
-                      Lock accounts after failed attempts
-                    </p>
+                    <p className="text-sm text-slate-600">Lock accounts after failed attempts</p>
                   </div>
                   <Select defaultValue="5">
                     <SelectTrigger className="w-32">
@@ -407,9 +354,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="border rounded-[3rem] p-4">
                   <div className="flex items-center justify-between mb-3">
                     <Label>Staff Role</Label>
-                    <Button variant="outline" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="outline" size="sm">Edit</Button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="flex items-center gap-2">
@@ -434,9 +379,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="border rounded-[3rem] p-4">
                   <div className="flex items-center justify-between mb-3">
                     <Label>Admin Role</Label>
-                    <Button variant="outline" size="sm">
-                      Edit
-                    </Button>
+                    <Button variant="outline" size="sm">Edit</Button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="flex items-center gap-2">
@@ -476,45 +419,33 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>Google Maps API</Label>
-                    <p className="text-sm text-slate-600">
-                      For location services and mapping
-                    </p>
+                    <p className="text-sm text-slate-600">For location services and mapping</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">Connected</Badge>
-                    <Button variant="outline" size="sm">
-                      Configure
-                    </Button>
+                    <Button variant="outline" size="sm">Configure</Button>
                   </div>
                 </div>
-
+                
                 <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>SMS Gateway</Label>
-                    <p className="text-sm text-slate-600">
-                      For SMS notifications
-                    </p>
+                    <p className="text-sm text-slate-600">For SMS notifications</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Not Connected</Badge>
-                    <Button variant="outline" size="sm">
-                      Setup
-                    </Button>
+                    <Button variant="outline" size="sm">Setup</Button>
                   </div>
                 </div>
-
+                
                 <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>Analytics Platform</Label>
-                    <p className="text-sm text-slate-600">
-                      For usage analytics and reporting
-                    </p>
+                    <p className="text-sm text-slate-600">For usage analytics and reporting</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Not Connected</Badge>
-                    <Button variant="outline" size="sm">
-                      Setup
-                    </Button>
+                    <Button variant="outline" size="sm">Setup</Button>
                   </div>
                 </div>
               </div>
@@ -534,19 +465,15 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Automatic Backups</Label>
-                    <p className="text-sm text-slate-600">
-                      Schedule regular database backups
-                    </p>
+                    <p className="text-sm text-slate-600">Schedule regular database backups</p>
                   </div>
                   <Switch defaultChecked />
                 </div>
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Backup Frequency</Label>
-                    <p className="text-sm text-slate-600">
-                      How often to create backups
-                    </p>
+                    <p className="text-sm text-slate-600">How often to create backups</p>
                   </div>
                   <Select defaultValue="daily">
                     <SelectTrigger className="w-32">
@@ -559,13 +486,11 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                     </SelectContent>
                   </Select>
                 </div>
-
+                
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Retention Period</Label>
-                    <p className="text-sm text-slate-600">
-                      How long to keep backups
-                    </p>
+                    <p className="text-sm text-slate-600">How long to keep backups</p>
                   </div>
                   <Select defaultValue="30">
                     <SelectTrigger className="w-32">
@@ -579,9 +504,9 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </Select>
                 </div>
               </div>
-
+              
               <Separator />
-
+              
               <div className="flex gap-2">
                 <Button variant="outline">Create Backup Now</Button>
                 <Button variant="outline">Restore from Backup</Button>

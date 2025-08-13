@@ -1,62 +1,23 @@
-import React, { useState, useEffect } from "react";
-import {
-  Search,
-  Filter,
-  Download,
-  Eye,
-  Edit,
-  MoreHorizontal,
-  Grid,
-  List,
-  Plus,
-  X,
-  RefreshCw,
-  Loader2,
-  UserPlus,
-  MessageSquare,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Badge } from "./ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
-import { toast } from "sonner";
-import { incidentsAPI } from "../services/api";
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Download, Eye, Edit, MoreHorizontal, Grid, List, Plus, X, RefreshCw, Loader2, UserPlus, MessageSquare } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Badge } from './ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
+import { toast } from 'sonner';
+import { incidentsAPI } from '../services/api';
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: "resident" | "staff" | "admin";
+  role: 'resident' | 'staff' | 'admin';
 };
 
 interface StaffIncidentsPageProps {
@@ -68,8 +29,8 @@ type Incident = {
   incidentId?: string;
   title: string;
   category: string;
-  status: "NEW" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  status: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   location: string;
   submittedBy: string;
   userId?: any;
@@ -98,41 +59,33 @@ type Incident = {
 };
 
 const statusColors = {
-  NEW: "bg-orange-100 text-orange-800 border-orange-200",
-  IN_PROGRESS: "bg-blue-100 text-blue-800 border-blue-200",
-  RESOLVED: "bg-green-100 text-green-800 border-green-200",
-  CLOSED: "bg-gray-100 text-gray-800 border-gray-200",
+  'NEW': 'bg-orange-100 text-orange-800 border-orange-200',
+  'IN_PROGRESS': 'bg-blue-100 text-blue-800 border-blue-200',
+  'RESOLVED': 'bg-green-100 text-green-800 border-green-200',
+  'CLOSED': 'bg-gray-100 text-gray-800 border-gray-200'
 };
 
 const priorityColors = {
-  LOW: "bg-green-50 text-green-700",
-  MEDIUM: "bg-yellow-50 text-yellow-700",
-  HIGH: "bg-orange-50 text-orange-700",
-  URGENT: "bg-red-50 text-red-700",
+  'LOW': 'bg-green-50 text-green-700',
+  'MEDIUM': 'bg-yellow-50 text-yellow-700',
+  'HIGH': 'bg-orange-50 text-orange-700',
+  'URGENT': 'bg-red-50 text-red-700'
 };
 
 const categories = [
-  "Infrastructure",
-  "Transportation",
-  "Safety",
-  "Environment",
-  "Utilities",
-  "Parks & Recreation",
-  "Public Property",
-  "Water & Utilities",
-  "Road Maintenance",
+  'Infrastructure', 'Transportation', 'Safety', 'Environment', 
+  'Utilities', 'Parks & Recreation', 'Public Property', 
+  'Water & Utilities', 'Road Maintenance'
 ];
 
 export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
-  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [priorityFilter, setPriorityFilter] = useState<string>("all");
-  const [assignmentFilter, setAssignmentFilter] = useState<string>("all");
-  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
-    null,
-  );
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [assignmentFilter, setAssignmentFilter] = useState<string>('all');
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -148,10 +101,10 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
   // Update form state
   const [updateForm, setUpdateForm] = useState({
-    status: "",
-    assignedTo: "",
-    notes: "",
-    priority: "",
+    status: '',
+    assignedTo: '',
+    notes: '',
+    priority: ''
   });
 
   // Staff list for assignment
@@ -165,14 +118,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
   // Load incidents when component mounts or filters change
   useEffect(() => {
     loadIncidents();
-  }, [
-    currentPage,
-    statusFilter,
-    categoryFilter,
-    priorityFilter,
-    assignmentFilter,
-    searchQuery,
-  ]);
+  }, [currentPage, statusFilter, categoryFilter, priorityFilter, assignmentFilter, searchQuery]);
 
   const loadIncidents = async (refresh = false) => {
     try {
@@ -186,45 +132,38 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
         page: currentPage,
         limit: itemsPerPage,
         ...(searchQuery && { search: searchQuery }),
-        ...(statusFilter !== "all" && { status: statusFilter }),
-        ...(categoryFilter !== "all" && { category: categoryFilter }),
-        ...(priorityFilter !== "all" && { priority: priorityFilter }),
-        ...(assignmentFilter === "assigned" && { assigned: "true" }),
-        ...(assignmentFilter === "unassigned" && { assignedTo: null }),
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        ...(categoryFilter !== 'all' && { category: categoryFilter }),
+        ...(priorityFilter !== 'all' && { priority: priorityFilter }),
+        ...(assignmentFilter === 'assigned' && { assigned: 'true' }),
+        ...(assignmentFilter === 'unassigned' && { assignedTo: null })
       };
 
-      console.log("Loading incidents with params:", params);
+      console.log('Loading incidents with params:', params);
 
       const response = await incidentsAPI.getAll(params);
-
+      
       // Transform backend data
-      const transformedIncidents = (response.incidents || []).map(
-        (incident) => ({
-          ...incident,
-          id: incident.id || incident._id,
-          incidentId:
-            incident.incidentId ||
-            `INC-${(incident.id || incident._id).slice(-6).toUpperCase()}`,
-          submittedOn: incident.createdAt || incident.submittedOn,
-          lastUpdated: incident.updatedAt || incident.lastUpdated,
-          submittedBy:
-            incident.userId?.name || incident.submittedBy || "Unknown User",
-          assignedTo: incident.assignedTo?.name || null,
-          priority: incident.priority || "MEDIUM",
-        }),
-      );
-
+      const transformedIncidents = (response.incidents || []).map(incident => ({
+        ...incident,
+        id: incident.id || incident._id,
+        incidentId: incident.incidentId || `INC-${(incident.id || incident._id).slice(-6).toUpperCase()}`,
+        submittedOn: incident.createdAt || incident.submittedOn,
+        lastUpdated: incident.updatedAt || incident.lastUpdated,
+        submittedBy: incident.userId?.name || incident.submittedBy || 'Unknown User',
+        assignedTo: incident.assignedTo?.name || null,
+        priority: incident.priority || 'MEDIUM'
+      }));
+      
       setIncidents(transformedIncidents);
       setTotalCount(response.total || 0);
       setTotalPages(response.totalPages || 1);
-
-      console.log(
-        "Incidents loaded successfully:",
-        transformedIncidents.length,
-      );
+      
+      console.log('Incidents loaded successfully:', transformedIncidents.length);
+      
     } catch (error) {
-      console.error("Failed to load incidents:", error);
-      toast.error("Failed to load incidents. Please try again.");
+      console.error('Failed to load incidents:', error);
+      toast.error('Failed to load incidents. Please try again.');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -235,9 +174,9 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
     setSelectedIncident(incident);
     setUpdateForm({
       status: incident.status,
-      assignedTo: incident.assignedTo || "",
-      notes: "",
-      priority: incident.priority,
+      assignedTo: incident.assignedTo || '',
+      notes: '',
+      priority: incident.priority
     });
     setShowUpdateModal(true);
   };
@@ -249,8 +188,8 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
       setSelectedIncident(fullIncident);
       setShowDetailsModal(true);
     } catch (error) {
-      console.error("Failed to load incident details:", error);
-      toast.error("Failed to load incident details.");
+      console.error('Failed to load incident details:', error);
+      toast.error('Failed to load incident details.');
     }
   };
 
@@ -263,15 +202,16 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
         selectedIncident.id,
         updateForm.status,
         updateForm.notes,
-        updateForm.assignedTo || undefined,
+        updateForm.assignedTo || undefined
       );
 
-      toast.success("Incident updated successfully");
+      toast.success('Incident updated successfully');
       setShowUpdateModal(false);
       await loadIncidents(true);
+      
     } catch (error) {
-      console.error("Failed to update incident:", error);
-      toast.error("Failed to update incident. Please try again.");
+      console.error('Failed to update incident:', error);
+      toast.error('Failed to update incident. Please try again.');
     } finally {
       setIsUpdating(false);
     }
@@ -279,37 +219,35 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
   const handleExport = async () => {
     try {
-      toast.info("Preparing export...");
+      toast.info('Preparing export...');
       // Implement export functionality
       const params = {
         search: searchQuery,
-        status: statusFilter !== "all" ? statusFilter : undefined,
-        category: categoryFilter !== "all" ? categoryFilter : undefined,
-        format: "csv",
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        category: categoryFilter !== 'all' ? categoryFilter : undefined,
+        format: 'csv'
       };
-
+      
       // Call export API endpoint
-      console.log("Exporting with params:", params);
-      toast.success("Export completed successfully");
+      console.log('Exporting with params:', params);
+      toast.success('Export completed successfully');
     } catch (error) {
-      console.error("Export failed:", error);
-      toast.error("Export failed. Please try again.");
+      console.error('Export failed:', error);
+      toast.error('Export failed. Please try again.');
     }
   };
 
   const getStatusBadge = (status: string) => {
     return (
-      <Badge className={statusColors[status] || statusColors["NEW"]}>
-        {status.replace("_", " ")}
+      <Badge className={statusColors[status] || statusColors['NEW']}>
+        {status.replace('_', ' ')}
       </Badge>
     );
   };
 
   const getPriorityBadge = (priority: string) => {
     return (
-      <span
-        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${priorityColors[priority] || priorityColors["MEDIUM"]}`}
-      >
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${priorityColors[priority] || priorityColors['MEDIUM']}`}>
         {priority}
       </span>
     );
@@ -318,19 +256,12 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
   const GridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {incidents.map((incident) => (
-        <Card
-          key={incident.id}
-          className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-400"
-        >
+        <Card key={incident.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-400">
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="space-y-1 flex-1 min-w-0">
-                <p className="font-mono text-sm text-slate-600">
-                  {incident.incidentId}
-                </p>
-                <CardTitle className="text-base leading-tight truncate">
-                  {incident.title}
-                </CardTitle>
+                <p className="font-mono text-sm text-slate-600">{incident.incidentId}</p>
+                <CardTitle className="text-base leading-tight truncate">{incident.title}</CardTitle>
                 <div className="flex items-center gap-2">
                   {getStatusBadge(incident.status)}
                   {getPriorityBadge(incident.priority)}
@@ -347,9 +278,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
                     <Eye className="w-4 h-4 mr-2" />
                     View Details
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleUpdateIncident(incident)}
-                  >
+                  <DropdownMenuItem onClick={() => handleUpdateIncident(incident)}>
                     <Edit className="w-4 h-4 mr-2" />
                     Update Status
                   </DropdownMenuItem>
@@ -358,9 +287,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
             </div>
           </CardHeader>
           <CardContent className="pt-0 space-y-3">
-            <p className="text-sm text-slate-600 line-clamp-2">
-              {incident.description}
-            </p>
+            <p className="text-sm text-slate-600 line-clamp-2">{incident.description}</p>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-500">Category:</span>
@@ -368,21 +295,15 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-500">Location:</span>
-                <span className="text-slate-700 truncate">
-                  {incident.location}
-                </span>
+                <span className="text-slate-700 truncate">{incident.location}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-500">Assigned:</span>
-                <span className="text-slate-700">
-                  {incident.assignedTo || "Unassigned"}
-                </span>
+                <span className="text-slate-700">{incident.assignedTo || 'Unassigned'}</span>
               </div>
             </div>
             <div className="text-xs text-slate-500 pt-2 border-t space-y-1">
-              <p>
-                Submitted: {new Date(incident.submittedOn).toLocaleDateString()}
-              </p>
+              <p>Submitted: {new Date(incident.submittedOn).toLocaleDateString()}</p>
               <p>By: {incident.submittedBy}</p>
             </div>
           </CardContent>
@@ -407,18 +328,15 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Incidents Management
-          </h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Incidents Management</h1>
           <p className="text-slate-600">
-            Manage and track all reported incidents • Total: {totalCount}{" "}
-            incidents
+            Manage and track all reported incidents • Total: {totalCount} incidents
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
+          <Button 
+            variant="outline" 
+            size="sm" 
             onClick={() => loadIncidents(true)}
             disabled={isRefreshing}
           >
@@ -453,7 +371,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
                 className="pl-10"
               />
             </div>
-
+            
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Status" />
@@ -496,17 +414,17 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
             <div className="flex items-center gap-1 bg-slate-100 rounded-[3rem] p-1">
               <Button
-                variant={viewMode === "table" ? "default" : "ghost"}
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setViewMode("table")}
+                onClick={() => setViewMode('table')}
                 className="h-7 px-2"
               >
                 <List className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode('grid')}
                 className="h-7 px-2"
               >
                 <Grid className="w-4 h-4" />
@@ -520,16 +438,15 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
       {incidents.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-6xl mb-4 opacity-20">📋</div>
-          <h3 className="text-lg font-medium text-slate-800 mb-2">
-            No incidents found
-          </h3>
+          <h3 className="text-lg font-medium text-slate-800 mb-2">No incidents found</h3>
           <p className="text-slate-600 mb-6">
-            {searchQuery || statusFilter !== "all" || categoryFilter !== "all"
-              ? "Try adjusting your filters or search terms"
-              : "No incidents have been reported yet"}
+            {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all' 
+              ? 'Try adjusting your filters or search terms'
+              : 'No incidents have been reported yet'
+            }
           </p>
         </div>
-      ) : viewMode === "table" ? (
+      ) : viewMode === 'table' ? (
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -550,26 +467,14 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
                 <TableBody>
                   {incidents.map((incident) => (
                     <TableRow key={incident.id} className="hover:bg-slate-50">
-                      <TableCell className="font-mono text-sm">
-                        {incident.incidentId}
-                      </TableCell>
-                      <TableCell className="font-medium max-w-48 truncate">
-                        {incident.title}
-                      </TableCell>
+                      <TableCell className="font-mono text-sm">{incident.incidentId}</TableCell>
+                      <TableCell className="font-medium max-w-48 truncate">{incident.title}</TableCell>
                       <TableCell>{incident.category}</TableCell>
                       <TableCell>{getStatusBadge(incident.status)}</TableCell>
-                      <TableCell>
-                        {getPriorityBadge(incident.priority)}
-                      </TableCell>
-                      <TableCell className="max-w-32 truncate">
-                        {incident.location}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(incident.submittedOn).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {incident.assignedTo || "Unassigned"}
-                      </TableCell>
+                      <TableCell>{getPriorityBadge(incident.priority)}</TableCell>
+                      <TableCell className="max-w-32 truncate">{incident.location}</TableCell>
+                      <TableCell>{new Date(incident.submittedOn).toLocaleDateString()}</TableCell>
+                      <TableCell>{incident.assignedTo || 'Unassigned'}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -578,15 +483,11 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleViewDetails(incident)}
-                            >
+                            <DropdownMenuItem onClick={() => handleViewDetails(incident)}>
                               <Eye className="w-4 h-4 mr-2" />
                               View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleUpdateIncident(incident)}
-                            >
+                            <DropdownMenuItem onClick={() => handleUpdateIncident(incident)}>
                               <Edit className="w-4 h-4 mr-2" />
                               Update Status
                             </DropdownMenuItem>
@@ -625,14 +526,12 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
                   {selectedIncident.title}
                 </p>
               </div>
-
+              
               <div>
                 <Label htmlFor="status">Status</Label>
-                <Select
-                  value={updateForm.status}
-                  onValueChange={(value) =>
-                    setUpdateForm((prev) => ({ ...prev, status: value }))
-                  }
+                <Select 
+                  value={updateForm.status} 
+                  onValueChange={(value) => setUpdateForm(prev => ({ ...prev, status: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -648,11 +547,9 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
               <div>
                 <Label htmlFor="assignedTo">Assign To</Label>
-                <Select
-                  value={updateForm.assignedTo}
-                  onValueChange={(value) =>
-                    setUpdateForm((prev) => ({ ...prev, assignedTo: value }))
-                  }
+                <Select 
+                  value={updateForm.assignedTo} 
+                  onValueChange={(value) => setUpdateForm(prev => ({ ...prev, assignedTo: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select staff member" />
@@ -670,37 +567,35 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
               <div>
                 <Label htmlFor="notes">Update Notes</Label>
-                <Textarea
+                <Textarea 
                   id="notes"
                   placeholder="Add internal notes about this update..."
                   className="resize-none"
                   rows={3}
                   value={updateForm.notes}
-                  onChange={(e) =>
-                    setUpdateForm((prev) => ({
-                      ...prev,
-                      notes: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setUpdateForm(prev => ({ ...prev, notes: e.target.value }))}
                 />
               </div>
 
               <div className="flex gap-2 justify-end">
-                <Button
-                  variant="outline"
+                <Button 
+                  variant="outline" 
                   onClick={() => setShowUpdateModal(false)}
                   disabled={isUpdating}
                 >
                   Cancel
                 </Button>
-                <Button onClick={submitUpdate} disabled={isUpdating}>
+                <Button 
+                  onClick={submitUpdate}
+                  disabled={isUpdating}
+                >
                   {isUpdating ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       Updating...
                     </>
                   ) : (
-                    "Update Incident"
+                    'Update Incident'
                   )}
                 </Button>
               </div>
@@ -720,9 +615,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
               <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-[3rem]">
                 <div>
                   <p className="text-sm font-medium text-slate-600">ID</p>
-                  <p className="font-mono text-sm">
-                    {selectedIncident.incidentId}
-                  </p>
+                  <p className="font-mono text-sm">{selectedIncident.incidentId}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-600">Status</p>
@@ -744,9 +637,7 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
               </div>
 
               <div>
-                <h4 className="font-semibold text-slate-800 mb-2">
-                  Description
-                </h4>
+                <h4 className="font-semibold text-slate-800 mb-2">Description</h4>
                 <p className="text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-[3rem]">
                   {selectedIncident.description}
                 </p>
@@ -754,100 +645,67 @@ export function StaffIncidentsPage({ user }: StaffIncidentsPageProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-2">
-                    Location
-                  </h4>
+                  <h4 className="font-semibold text-slate-800 mb-2">Location</h4>
                   <p className="text-slate-700">{selectedIncident.location}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-2">
-                    Submitted By
-                  </h4>
-                  <p className="text-slate-700">
-                    {selectedIncident.submittedBy}
-                  </p>
+                  <h4 className="font-semibold text-slate-800 mb-2">Submitted By</h4>
+                  <p className="text-slate-700">{selectedIncident.submittedBy}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-2">
-                    Submitted On
-                  </h4>
-                  <p className="text-slate-700">
-                    {new Date(selectedIncident.submittedOn).toLocaleString()}
-                  </p>
+                  <h4 className="font-semibold text-slate-800 mb-2">Submitted On</h4>
+                  <p className="text-slate-700">{new Date(selectedIncident.submittedOn).toLocaleString()}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-2">
-                    Last Updated
-                  </h4>
-                  <p className="text-slate-700">
-                    {new Date(selectedIncident.lastUpdated).toLocaleString()}
-                  </p>
+                  <h4 className="font-semibold text-slate-800 mb-2">Last Updated</h4>
+                  <p className="text-slate-700">{new Date(selectedIncident.lastUpdated).toLocaleString()}</p>
                 </div>
               </div>
 
               {selectedIncident.contactInfo && (
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-2">
-                    Contact Information
-                  </h4>
+                  <h4 className="font-semibold text-slate-800 mb-2">Contact Information</h4>
                   <div className="bg-slate-50 p-3 rounded-[3rem]">
                     {selectedIncident.contactInfo.email && (
-                      <p className="text-sm">
-                        Email: {selectedIncident.contactInfo.email}
-                      </p>
+                      <p className="text-sm">Email: {selectedIncident.contactInfo.email}</p>
                     )}
                     {selectedIncident.contactInfo.phone && (
-                      <p className="text-sm">
-                        Phone: {selectedIncident.contactInfo.phone}
-                      </p>
+                      <p className="text-sm">Phone: {selectedIncident.contactInfo.phone}</p>
                     )}
                   </div>
                 </div>
               )}
 
-              {selectedIncident.statusHistory &&
-                selectedIncident.statusHistory.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-slate-800 mb-2">
-                      Status History
-                    </h4>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {selectedIncident.statusHistory.map((entry, index) => (
-                        <div
-                          key={index}
-                          className="bg-slate-50 p-3 rounded-[3rem] text-sm"
-                        >
-                          <div className="flex justify-between items-center mb-1">
-                            <Badge
-                              className={
-                                statusColors[entry.status] ||
-                                statusColors["NEW"]
-                              }
-                            >
-                              {entry.status}
-                            </Badge>
-                            <span className="text-slate-500">
-                              {new Date(entry.updatedAt).toLocaleDateString()}
-                            </span>
-                          </div>
-                          {entry.notes && (
-                            <p className="text-slate-700">{entry.notes}</p>
-                          )}
-                          <p className="text-slate-500 text-xs">
-                            By: {entry.updatedBy?.name || "System"}
-                          </p>
+              {selectedIncident.statusHistory && selectedIncident.statusHistory.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-2">Status History</h4>
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {selectedIncident.statusHistory.map((entry, index) => (
+                      <div key={index} className="bg-slate-50 p-3 rounded-[3rem] text-sm">
+                        <div className="flex justify-between items-center mb-1">
+                          <Badge className={statusColors[entry.status] || statusColors['NEW']}>
+                            {entry.status}
+                          </Badge>
+                          <span className="text-slate-500">
+                            {new Date(entry.updatedAt).toLocaleDateString()}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                        {entry.notes && <p className="text-slate-700">{entry.notes}</p>}
+                        <p className="text-slate-500 text-xs">
+                          By: {entry.updatedBy?.name || 'System'}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
 
               <div className="flex gap-2 pt-4 border-t">
-                <Button
-                  variant="outline"
+                <Button 
+                  variant="outline" 
                   onClick={() => handleUpdateIncident(selectedIncident)}
                   className="flex-1"
                 >
