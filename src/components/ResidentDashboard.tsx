@@ -49,7 +49,7 @@ export function ResidentDashboard({ user, onNavigate, onLogout }: ResidentDashbo
               <Card key={index} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center">
-                    <div className={`${stat.color} p-3 rounded-lg`}>
+                    <div className={`${stat.color} p-3 rounded-[3rem]`}>
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <div className="ml-4">
@@ -68,7 +68,7 @@ export function ResidentDashboard({ user, onNavigate, onLogout }: ResidentDashbo
           <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate('chatbot')}>
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
-                <div className="bg-blue-100 p-3 rounded-lg">
+                <div className="bg-blue-100 p-3 rounded-[3rem]">
                   <MessageSquare className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
@@ -82,7 +82,7 @@ export function ResidentDashboard({ user, onNavigate, onLogout }: ResidentDashbo
           <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate('incidents')}>
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
-                <div className="bg-orange-100 p-3 rounded-lg">
+                <div className="bg-orange-100 p-3 rounded-[3rem]">
                   <AlertTriangle className="h-6 w-6 text-orange-600" />
                 </div>
                 <div>
@@ -102,7 +102,7 @@ export function ResidentDashboard({ user, onNavigate, onLogout }: ResidentDashbo
           <CardContent>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-[3rem]">
                   <div className={`p-2 rounded-full ${
                     activity.type === 'chat' ? 'bg-blue-100' : 'bg-orange-100'
                   }`}>

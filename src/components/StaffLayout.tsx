@@ -58,7 +58,7 @@ export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLa
         {/* Logo */}
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-600 rounded-[3rem] flex items-center justify-center">
               <span className="text-white font-medium text-sm">CN</span>
             </div>
             <div>

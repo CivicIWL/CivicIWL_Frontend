@@ -34,7 +34,7 @@ export function Layout({ user, currentPage, onNavigate, onLogout, children }: La
       {/* Header */}
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center space-x-3">
-          <div className="bg-blue-600 p-2 rounded-lg">
+          <div className="bg-blue-600 p-2 rounded-[3rem]">
             <Building2 className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -70,7 +70,7 @@ export function Layout({ user, currentPage, onNavigate, onLogout, children }: La
                     onNavigate(item.id as Page);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-[3rem] transition-colors ${
                     isActive
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -112,7 +112,7 @@ export function Layout({ user, currentPage, onNavigate, onLogout, children }: La
       <div className="lg:hidden bg-white border-b border-slate-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 p-2 rounded-lg">
+            <div className="bg-blue-600 p-2 rounded-[3rem]">
               <Building2 className="h-6 w-6 text-white" />
             </div>
             <h2 className="text-lg text-slate-900">CivicNavigator</h2>

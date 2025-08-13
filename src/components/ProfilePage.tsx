@@ -110,7 +110,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                         onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-md">
+                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
                         <User className="h-4 w-4 text-slate-400" />
                         <span>{profileData.name}</span>
                       </div>
@@ -126,7 +126,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                         onChange={(e) => setEditData({ ...editData, email: e.target.value })}
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-md">
+                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
                         <Mail className="h-4 w-4 text-slate-400" />
                         <span>{profileData.email}</span>
                       </div>
@@ -141,7 +141,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                         onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-md">
+                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
                         <Phone className="h-4 w-4 text-slate-400" />
                         <span>{profileData.phone}</span>
                       </div>
@@ -156,7 +156,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
                         onChange={(e) => setEditData({ ...editData, address: e.target.value })}
                       />
                     ) : (
-                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-md">
+                      <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-[3rem]">
                         <MapPin className="h-4 w-4 text-slate-400" />
                         <span>{profileData.address}</span>
                       </div>
@@ -175,7 +175,7 @@ export function ProfilePage({ user, onNavigate, onLogout }: ProfilePageProps) {
               <CardContent>
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-[3rem]">
                       <div className={`p-2 rounded-full ${
                         activity.type === 'chat' ? 'bg-blue-100' : 'bg-orange-100'
                       }`}>

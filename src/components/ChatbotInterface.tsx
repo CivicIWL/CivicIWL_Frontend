@@ -457,7 +457,7 @@ export function ChatbotInterface({ user, onNavigate, onLogout }: ChatbotInterfac
                                   {message.citations.map((citation, index) => (
                                     <span
                                       key={index}
-                                      className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+                                      className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-[3rem] border border-blue-200 hover:bg-blue-100 transition-colors"
                                     >
                                       [{index + 1}] {citation}
                                     </span>

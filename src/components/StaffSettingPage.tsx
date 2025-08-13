@@ -135,7 +135,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
                     <span>New</span>
@@ -146,7 +146,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                     <span>In Progress</span>
@@ -157,7 +157,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                     <span>Resolved</span>
@@ -168,7 +168,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border rounded-[3rem]">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
                     <span>Closed</span>
@@ -351,7 +351,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="border rounded-lg p-4">
+                <div className="border rounded-[3rem] p-4">
                   <div className="flex items-center justify-between mb-3">
                     <Label>Staff Role</Label>
                     <Button variant="outline" size="sm">Edit</Button>
@@ -376,7 +376,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
 
-                <div className="border rounded-lg p-4">
+                <div className="border rounded-[3rem] p-4">
                   <div className="flex items-center justify-between mb-3">
                     <Label>Admin Role</Label>
                     <Button variant="outline" size="sm">Edit</Button>
@@ -416,7 +416,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>Google Maps API</Label>
                     <p className="text-sm text-slate-600">For location services and mapping</p>
@@ -427,7 +427,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>SMS Gateway</Label>
                     <p className="text-sm text-slate-600">For SMS notifications</p>
@@ -438,7 +438,7 @@ export function StaffSettingsPage({ user }: StaffSettingsPageProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-[3rem]">
                   <div>
                     <Label>Analytics Platform</Label>
                     <p className="text-sm text-slate-600">For usage analytics and reporting</p>
