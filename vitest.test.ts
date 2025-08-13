@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 
-// utility function
 const add = (a: number, b: number) => a + b;
 
 describe("Example Passing Tests", () => {
