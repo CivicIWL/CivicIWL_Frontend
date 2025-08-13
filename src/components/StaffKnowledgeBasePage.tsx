@@ -1,24 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Plus, Edit, Trash2, Eye, MoreHorizontal, Grid, List, Book, RefreshCw, Loader2, Archive, Globe } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { Switch } from './ui/switch';
-import { toast } from 'sonner';
-import { kbAPI } from '../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  MoreHorizontal,
+  Grid,
+  List,
+  Book,
+  RefreshCw,
+  Loader2,
+  Archive,
+  Globe,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+import { toast } from "sonner";
+import { kbAPI } from "../services/api";
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: 'resident' | 'staff' | 'admin';
+  role: "resident" | "staff" | "admin";
 };
 
 interface StaffKnowledgeBasePageProps {
@@ -30,7 +62,7 @@ type Article = {
   _id?: string;
   title: string;
   category: string;
-  status: 'draft' | 'published' | 'archived';
+  status: "draft" | "published" | "archived";
   views: number;
   createdAt: string;
   updatedAt: string;
@@ -51,15 +83,20 @@ type ArticleStats = {
 };
 
 const categories = [
-  'Infrastructure', 'Safety', 'Civic Engagement', 
-  'Transportation', 'Environment', 'Utilities', 'General'
+  "Infrastructure",
+  "Safety",
+  "Civic Engagement",
+  "Transportation",
+  "Environment",
+  "Utilities",
+  "General",
 ];
 
 export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showNewModal, setShowNewModal] = useState(false);
@@ -71,7 +108,7 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
     totalArticles: 0,
     totalViews: 0,
     draftArticles: 0,
-    publishedArticles: 0
+    publishedArticles: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -81,12 +118,12 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
   // Form state
   const [articleForm, setArticleForm] = useState({
-    title: '',
-    content: '',
-    category: '',
-    tags: '',
-    sourceUrl: '',
-    status: 'draft' as 'draft' | 'published' | 'archived'
+    title: "",
+    content: "",
+    category: "",
+    tags: "",
+    sourceUrl: "",
+    status: "draft" as "draft" | "published" | "archived",
   });
 
   const itemsPerPage = 20;
@@ -106,20 +143,20 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
       const params = {
         page: currentPage,
         limit: itemsPerPage,
-        ...(statusFilter !== 'all' && { status: statusFilter }),
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        ...(searchQuery && { search: searchQuery })
+        ...(statusFilter !== "all" && { status: statusFilter }),
+        ...(categoryFilter !== "all" && { category: categoryFilter }),
+        ...(searchQuery && { search: searchQuery }),
       };
 
-      console.log('Loading articles with params:', params);
+      console.log("Loading articles with params:", params);
 
       const response = await kbAPI.getArticles(params);
-      
-      const transformedArticles = (response.articles || []).map(article => ({
+
+      const transformedArticles = (response.articles || []).map((article) => ({
         ...article,
         id: article.id || article._id,
         createdAt: article.createdAt,
-        updatedAt: article.updatedAt
+        updatedAt: article.updatedAt,
       }));
 
       setArticles(transformedArticles);
@@ -127,22 +164,28 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
       // Calculate stats from loaded articles
       const totalArticles = transformedArticles.length;
-      const totalViews = transformedArticles.reduce((sum, article) => sum + (article.views || 0), 0);
-      const draftArticles = transformedArticles.filter(a => a.status === 'draft').length;
-      const publishedArticles = transformedArticles.filter(a => a.status === 'published').length;
+      const totalViews = transformedArticles.reduce(
+        (sum, article) => sum + (article.views || 0),
+        0,
+      );
+      const draftArticles = transformedArticles.filter(
+        (a) => a.status === "draft",
+      ).length;
+      const publishedArticles = transformedArticles.filter(
+        (a) => a.status === "published",
+      ).length;
 
       setStats({
         totalArticles,
         totalViews,
         draftArticles,
-        publishedArticles
+        publishedArticles,
       });
 
-      console.log('Articles loaded successfully:', transformedArticles.length);
-      
+      console.log("Articles loaded successfully:", transformedArticles.length);
     } catch (error) {
-      console.error('Failed to load articles:', error);
-      toast.error('Failed to load articles. Please try again.');
+      console.error("Failed to load articles:", error);
+      toast.error("Failed to load articles. Please try again.");
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -151,7 +194,7 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
   const handleCreateArticle = async () => {
     if (!articleForm.title || !articleForm.content || !articleForm.category) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -161,21 +204,23 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
         title: articleForm.title.trim(),
         content: articleForm.content.trim(),
         category: articleForm.category,
-        tags: articleForm.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        tags: articleForm.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
         sourceUrl: articleForm.sourceUrl.trim() || undefined,
-        status: articleForm.status
+        status: articleForm.status,
       };
 
       await kbAPI.createArticle(payload);
-      
-      toast.success('Article created successfully');
+
+      toast.success("Article created successfully");
       setShowNewModal(false);
       resetForm();
       await loadArticles(true);
-      
     } catch (error) {
-      console.error('Failed to create article:', error);
-      toast.error('Failed to create article. Please try again.');
+      console.error("Failed to create article:", error);
+      toast.error("Failed to create article. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -183,7 +228,7 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
   const handleUpdateArticle = async () => {
     if (!selectedArticle || !articleForm.title || !articleForm.content) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -193,21 +238,23 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
         title: articleForm.title.trim(),
         content: articleForm.content.trim(),
         category: articleForm.category,
-        tags: articleForm.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        tags: articleForm.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
         sourceUrl: articleForm.sourceUrl.trim() || undefined,
-        status: articleForm.status
+        status: articleForm.status,
       };
 
       await kbAPI.updateArticle(selectedArticle.id, payload);
-      
-      toast.success('Article updated successfully');
+
+      toast.success("Article updated successfully");
       setShowEditModal(false);
       resetForm();
       await loadArticles(true);
-      
     } catch (error) {
-      console.error('Failed to update article:', error);
-      toast.error('Failed to update article. Please try again.');
+      console.error("Failed to update article:", error);
+      toast.error("Failed to update article. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -220,11 +267,11 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
     try {
       await kbAPI.deleteArticle(article.id);
-      toast.success('Article deleted successfully');
+      toast.success("Article deleted successfully");
       await loadArticles(true);
     } catch (error) {
-      console.error('Failed to delete article:', error);
-      toast.error('Failed to delete article. Please try again.');
+      console.error("Failed to delete article:", error);
+      toast.error("Failed to delete article. Please try again.");
     }
   };
 
@@ -234,9 +281,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
       title: article.title,
       content: article.content,
       category: article.category,
-      tags: article.tags.join(', '),
-      sourceUrl: article.sourceUrl || '',
-      status: article.status
+      tags: article.tags.join(", "),
+      sourceUrl: article.sourceUrl || "",
+      status: article.status,
     });
     setShowEditModal(true);
   };
@@ -254,24 +301,24 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
   const resetForm = () => {
     setSelectedArticle(null);
     setArticleForm({
-      title: '',
-      content: '',
-      category: '',
-      tags: '',
-      sourceUrl: '',
-      status: 'draft'
+      title: "",
+      content: "",
+      category: "",
+      tags: "",
+      sourceUrl: "",
+      status: "draft",
     });
   };
 
   const getStatusBadge = (status: string) => {
     const variants = {
-      'published': 'bg-green-100 text-green-800 border-green-200',
-      'draft': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      'archived': 'bg-gray-100 text-gray-800 border-gray-200'
+      published: "bg-green-100 text-green-800 border-green-200",
+      draft: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      archived: "bg-gray-100 text-gray-800 border-gray-200",
     };
-    
+
     return (
-      <Badge className={variants[status] || variants['draft']}>
+      <Badge className={variants[status] || variants["draft"]}>
         {status.toUpperCase()}
       </Badge>
     );
@@ -280,7 +327,10 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
   const GridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {articles.map((article) => (
-        <Card key={article.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-green-400">
+        <Card
+          key={article.id}
+          className="hover:shadow-lg transition-shadow border-l-4 border-l-green-400"
+        >
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="space-y-2 flex-1 min-w-0">
@@ -301,7 +351,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => handlePreviewArticle(article)}>
+                  <DropdownMenuItem
+                    onClick={() => handlePreviewArticle(article)}
+                  >
                     <Eye className="w-4 h-4 mr-2" />
                     Preview
                   </DropdownMenuItem>
@@ -309,7 +361,7 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                     <Edit className="w-4 h-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => handleDeleteArticle(article)}
                     className="text-red-600"
                   >
@@ -321,7 +373,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             </div>
           </CardHeader>
           <CardContent className="pt-0 space-y-3">
-            <p className="text-sm text-slate-600 line-clamp-3">{article.content}</p>
+            <p className="text-sm text-slate-600 line-clamp-3">
+              {article.content}
+            </p>
             {article.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {article.tags.slice(0, 3).map((tag) => (
@@ -365,12 +419,16 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Knowledge Base Manager</h1>
-          <p className="text-slate-600">Create and manage helpful articles for residents</p>
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Knowledge Base Manager
+          </h1>
+          <p className="text-slate-600">
+            Create and manage helpful articles for residents
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => loadArticles(true)}
             disabled={isRefreshing}
           >
@@ -406,7 +464,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             <div className="flex items-center space-x-2">
               <Eye className="w-8 h-8 text-green-600" />
               <div>
-                <p className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</p>
+                <p className="text-2xl font-bold">
+                  {stats.totalViews.toLocaleString()}
+                </p>
                 <p className="text-sm text-slate-600">Total Views</p>
               </div>
             </div>
@@ -449,7 +509,7 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Status" />
@@ -478,17 +538,17 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
             <div className="flex items-center gap-1 bg-slate-100 rounded-[3rem] p-1">
               <Button
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                variant={viewMode === "table" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('table')}
+                onClick={() => setViewMode("table")}
                 className="h-7 px-2"
               >
                 <List className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className="h-7 px-2"
               >
                 <Grid className="w-4 h-4" />
@@ -504,19 +564,20 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
           <div className="text-6xl mb-4 opacity-20">
             <Book className="h-16 w-16 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-slate-800 mb-2">No articles found</h3>
+          <h3 className="text-lg font-medium text-slate-800 mb-2">
+            No articles found
+          </h3>
           <p className="text-slate-600 mb-6">
-            {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all' 
-              ? 'Try adjusting your filters or search terms'
-              : 'Create your first knowledge base article'
-            }
+            {searchQuery || statusFilter !== "all" || categoryFilter !== "all"
+              ? "Try adjusting your filters or search terms"
+              : "Create your first knowledge base article"}
           </p>
           <Button onClick={handleNewArticle}>
             <Plus className="w-4 h-4 mr-2" />
             Create First Article
           </Button>
         </div>
-      ) : viewMode === 'table' ? (
+      ) : viewMode === "table" ? (
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -527,7 +588,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                     <TableHead className="font-semibold">Category</TableHead>
                     <TableHead className="font-semibold">Status</TableHead>
                     <TableHead className="font-semibold">Views</TableHead>
-                    <TableHead className="font-semibold">Last Updated</TableHead>
+                    <TableHead className="font-semibold">
+                      Last Updated
+                    </TableHead>
                     <TableHead className="font-semibold">Author</TableHead>
                     <TableHead className="font-semibold">Actions</TableHead>
                   </TableRow>
@@ -535,11 +598,15 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                 <TableBody>
                   {articles.map((article) => (
                     <TableRow key={article.id} className="hover:bg-slate-50">
-                      <TableCell className="font-medium max-w-64 truncate">{article.title}</TableCell>
+                      <TableCell className="font-medium max-w-64 truncate">
+                        {article.title}
+                      </TableCell>
                       <TableCell>{article.category}</TableCell>
                       <TableCell>{getStatusBadge(article.status)}</TableCell>
                       <TableCell>{article.views.toLocaleString()}</TableCell>
-                      <TableCell>{new Date(article.updatedAt).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        {new Date(article.updatedAt).toLocaleDateString()}
+                      </TableCell>
                       <TableCell>{article.author.name}</TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -549,15 +616,19 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handlePreviewArticle(article)}>
+                            <DropdownMenuItem
+                              onClick={() => handlePreviewArticle(article)}
+                            >
                               <Eye className="w-4 h-4 mr-2" />
                               Preview
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditArticle(article)}>
+                            <DropdownMenuItem
+                              onClick={() => handleEditArticle(article)}
+                            >
                               <Edit className="w-4 h-4 mr-2" />
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => handleDeleteArticle(article)}
                               className="text-red-600"
                             >
@@ -587,20 +658,24 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
           <div className="space-y-4">
             <div>
               <Label htmlFor="edit-title">Title *</Label>
-              <Input 
+              <Input
                 id="edit-title"
                 value={articleForm.title}
-                onChange={(e) => setArticleForm(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setArticleForm((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Enter article title..."
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="edit-category">Category *</Label>
-                <Select 
+                <Select
                   value={articleForm.category}
-                  onValueChange={(value) => setArticleForm(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value) =>
+                    setArticleForm((prev) => ({ ...prev, category: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -614,13 +689,13 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="edit-status">Status</Label>
-                <Select 
+                <Select
                   value={articleForm.status}
-                  onValueChange={(value: 'draft' | 'published' | 'archived') => 
-                    setArticleForm(prev => ({ ...prev, status: value }))
+                  onValueChange={(value: "draft" | "published" | "archived") =>
+                    setArticleForm((prev) => ({ ...prev, status: value }))
                   }
                 >
                   <SelectTrigger>
@@ -637,10 +712,15 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
             <div>
               <Label htmlFor="edit-content">Content *</Label>
-              <Textarea 
+              <Textarea
                 id="edit-content"
                 value={articleForm.content}
-                onChange={(e) => setArticleForm(prev => ({ ...prev, content: e.target.value }))}
+                onChange={(e) =>
+                  setArticleForm((prev) => ({
+                    ...prev,
+                    content: e.target.value,
+                  }))
+                }
                 rows={10}
                 className="resize-none"
                 placeholder="Write your article content here..."
@@ -650,20 +730,30 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="edit-tags">Tags (comma-separated)</Label>
-                <Input 
+                <Input
                   id="edit-tags"
                   value={articleForm.tags}
-                  onChange={(e) => setArticleForm(prev => ({ ...prev, tags: e.target.value }))}
+                  onChange={(e) =>
+                    setArticleForm((prev) => ({
+                      ...prev,
+                      tags: e.target.value,
+                    }))
+                  }
                   placeholder="tag1, tag2, tag3"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="edit-source">Source URL (optional)</Label>
-                <Input 
+                <Input
                   id="edit-source"
                   value={articleForm.sourceUrl}
-                  onChange={(e) => setArticleForm(prev => ({ ...prev, sourceUrl: e.target.value }))}
+                  onChange={(e) =>
+                    setArticleForm((prev) => ({
+                      ...prev,
+                      sourceUrl: e.target.value,
+                    }))
+                  }
                   placeholder="https://example.com"
                   type="url"
                 />
@@ -671,24 +761,21 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             </div>
 
             <div className="flex gap-2 justify-end pt-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowEditModal(false)}
                 disabled={isSaving}
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleUpdateArticle}
-                disabled={isSaving}
-              >
+              <Button onClick={handleUpdateArticle} disabled={isSaving}>
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Saving...
                   </>
                 ) : (
-                  'Save Changes'
+                  "Save Changes"
                 )}
               </Button>
             </div>
@@ -705,20 +792,24 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
           <div className="space-y-4">
             <div>
               <Label htmlFor="new-title">Title *</Label>
-              <Input 
+              <Input
                 id="new-title"
                 value={articleForm.title}
-                onChange={(e) => setArticleForm(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setArticleForm((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Enter article title..."
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="new-category">Category *</Label>
-                <Select 
+                <Select
                   value={articleForm.category}
-                  onValueChange={(value) => setArticleForm(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value) =>
+                    setArticleForm((prev) => ({ ...prev, category: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -732,13 +823,13 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="new-status">Status</Label>
-                <Select 
+                <Select
                   value={articleForm.status}
-                  onValueChange={(value: 'draft' | 'published' | 'archived') => 
-                    setArticleForm(prev => ({ ...prev, status: value }))
+                  onValueChange={(value: "draft" | "published" | "archived") =>
+                    setArticleForm((prev) => ({ ...prev, status: value }))
                   }
                 >
                   <SelectTrigger>
@@ -755,10 +846,15 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
 
             <div>
               <Label htmlFor="new-content">Content *</Label>
-              <Textarea 
+              <Textarea
                 id="new-content"
                 value={articleForm.content}
-                onChange={(e) => setArticleForm(prev => ({ ...prev, content: e.target.value }))}
+                onChange={(e) =>
+                  setArticleForm((prev) => ({
+                    ...prev,
+                    content: e.target.value,
+                  }))
+                }
                 placeholder="Write your article content here..."
                 rows={10}
                 className="resize-none"
@@ -768,20 +864,30 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="new-tags">Tags (comma-separated)</Label>
-                <Input 
+                <Input
                   id="new-tags"
                   value={articleForm.tags}
-                  onChange={(e) => setArticleForm(prev => ({ ...prev, tags: e.target.value }))}
+                  onChange={(e) =>
+                    setArticleForm((prev) => ({
+                      ...prev,
+                      tags: e.target.value,
+                    }))
+                  }
                   placeholder="tag1, tag2, tag3"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="new-source">Source URL (optional)</Label>
-                <Input 
+                <Input
                   id="new-source"
                   value={articleForm.sourceUrl}
-                  onChange={(e) => setArticleForm(prev => ({ ...prev, sourceUrl: e.target.value }))}
+                  onChange={(e) =>
+                    setArticleForm((prev) => ({
+                      ...prev,
+                      sourceUrl: e.target.value,
+                    }))
+                  }
                   placeholder="https://example.com"
                   type="url"
                 />
@@ -789,24 +895,21 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
             </div>
 
             <div className="flex gap-2 justify-end pt-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowNewModal(false)}
                 disabled={isSaving}
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleCreateArticle}
-                disabled={isSaving}
-              >
+              <Button onClick={handleCreateArticle} disabled={isSaving}>
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Creating...
                   </>
                 ) : (
-                  'Create Article'
+                  "Create Article"
                 )}
               </Button>
             </div>
@@ -823,7 +926,9 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
           {selectedArticle && (
             <div className="space-y-4">
               <div className="border-b pb-4">
-                <h1 className="text-2xl font-bold text-slate-900 mb-2">{selectedArticle.title}</h1>
+                <h1 className="text-2xl font-bold text-slate-900 mb-2">
+                  {selectedArticle.title}
+                </h1>
                 <div className="flex items-center gap-4 text-sm text-slate-600">
                   <span>Category: {selectedArticle.category}</span>
                   <span>•</span>
@@ -843,31 +948,42 @@ export function StaffKnowledgeBasePage({ user }: StaffKnowledgeBasePageProps) {
                   </div>
                 )}
               </div>
-              
+
               <div className="prose max-w-none">
                 <div className="whitespace-pre-wrap leading-relaxed text-slate-700">
                   {selectedArticle.content}
                 </div>
               </div>
-              
+
               {selectedArticle.sourceUrl && (
                 <div className="border-t pt-4">
                   <p className="text-sm text-slate-600">
-                    Source: <a href={selectedArticle.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    Source:{" "}
+                    <a
+                      href={selectedArticle.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
                       {selectedArticle.sourceUrl}
                     </a>
                   </p>
                 </div>
               )}
-              
+
               <div className="flex gap-2 justify-end pt-4 border-t">
-                <Button variant="outline" onClick={() => setShowPreviewModal(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowPreviewModal(false)}
+                >
                   Close
                 </Button>
-                <Button onClick={() => {
-                  setShowPreviewModal(false);
-                  handleEditArticle(selectedArticle);
-                }}>
+                <Button
+                  onClick={() => {
+                    setShowPreviewModal(false);
+                    handleEditArticle(selectedArticle);
+                  }}
+                >
                   <Edit className="w-4 h-4 mr-2" />
                   Edit Article
                 </Button>

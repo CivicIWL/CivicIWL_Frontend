@@ -1,7 +1,13 @@
-// frontend/src/hooks/useAuth.ts
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { authAPI } from '../services/api';
-import type { User } from '../types';
+//hooks/useAuth.ts
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+} from "react";
+import type { ReactNode } from "react";
+import { authAPI } from "../services/api";
+import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
@@ -20,16 +26,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is logged in on mount
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const savedUser = localStorage.getItem('user');
-    
+    const token = localStorage.getItem("authToken");
+    const savedUser = localStorage.getItem("user");
+
     if (token && savedUser) {
       try {
         setUser(JSON.parse(savedUser));
       } catch (error) {
-        console.error('Error parsing saved user:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
+        console.error("Error parsing saved user:", error);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
       }
     }
     setLoading(false);
@@ -73,20 +79,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     login,
     register,
     logout,
-    updateProfile
+    updateProfile,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

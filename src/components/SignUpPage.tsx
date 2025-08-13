@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Checkbox } from './ui/checkbox';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { Building2 } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Checkbox } from "./ui/checkbox";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Building2 } from "lucide-react";
 
 interface SignUpPageProps {
   onSignUp: (name: string, email: string, password: string) => void;
   onSwitchToLogin: () => void;
+  isLoading?: boolean;
 }
 
 export function SignUpPage({ onSignUp, onSwitchToLogin }: SignUpPageProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,7 +52,9 @@ export function SignUpPage({ onSignUp, onSwitchToLogin }: SignUpPageProps) {
         {/* Sign Up Form */}
         <Card className="shadow-lg border-0">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Create account</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Create account
+            </CardTitle>
             <CardDescription className="text-center">
               Get started with your civic assistant
             </CardDescription>
@@ -99,14 +109,16 @@ export function SignUpPage({ onSignUp, onSwitchToLogin }: SignUpPageProps) {
                 <Checkbox
                   id="terms"
                   checked={agreeToTerms}
-                  onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    setAgreeToTerms(checked as boolean)
+                  }
                 />
                 <Label htmlFor="terms" className="text-sm">
                   I agree to the terms and conditions
                 </Label>
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={!agreeToTerms || password !== confirmPassword}
               >
@@ -116,7 +128,7 @@ export function SignUpPage({ onSignUp, onSwitchToLogin }: SignUpPageProps) {
           </form>
           <CardFooter>
             <p className="text-center text-sm text-slate-600 w-full">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 onClick={onSwitchToLogin}
                 className="text-blue-600 hover:text-blue-700 underline"

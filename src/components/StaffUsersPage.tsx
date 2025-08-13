@@ -1,24 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Plus, Edit, MoreHorizontal, Shield, User, Grid, List, UserPlus, Crown, RefreshCw, Loader2, UserX, Ban } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Label } from './ui/label';
-import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-import { Checkbox } from './ui/checkbox';
-import { toast } from 'sonner';
-import { usersAPI } from '../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Plus,
+  Edit,
+  MoreHorizontal,
+  Shield,
+  User,
+  Grid,
+  List,
+  UserPlus,
+  Crown,
+  RefreshCw,
+  Loader2,
+  UserX,
+  Ban,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Checkbox } from "./ui/checkbox";
+import { toast } from "sonner";
+import { usersAPI } from "../services/api";
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: 'resident' | 'staff' | 'admin';
+  role: "resident" | "staff" | "admin";
 };
 
 interface StaffUsersPageProps {
@@ -30,8 +63,8 @@ type UserData = {
   _id?: string;
   name: string;
   email: string;
-  role: 'resident' | 'staff' | 'admin';
-  status: 'active' | 'inactive' | 'suspended';
+  role: "resident" | "staff" | "admin";
+  status: "active" | "inactive" | "suspended";
   createdAt: string;
   updatedAt: string;
   lastLogin?: string;
@@ -54,48 +87,68 @@ type CreateUserForm = {
   name: string;
   email: string;
   password: string;
-  role: 'staff' | 'admin';
+  role: "staff" | "admin";
   permissions: string[];
 };
 
 type UpdateUserForm = {
   name: string;
-  role: 'resident' | 'staff' | 'admin';
-  status: 'active' | 'inactive' | 'suspended';
+  role: "resident" | "staff" | "admin";
+  status: "active" | "inactive" | "suspended";
   permissions: string[];
 };
 
 const roleColors = {
-  resident: 'bg-blue-100 text-blue-800 border-blue-200',
-  staff: 'bg-green-100 text-green-800 border-green-200',
-  admin: 'bg-purple-100 text-purple-800 border-purple-200'
+  resident: "bg-blue-100 text-blue-800 border-blue-200",
+  staff: "bg-green-100 text-green-800 border-green-200",
+  admin: "bg-purple-100 text-purple-800 border-purple-200",
 };
 
 const statusColors = {
-  active: 'bg-green-100 text-green-800 border-green-200',
-  inactive: 'bg-gray-100 text-gray-800 border-gray-200',
-  suspended: 'bg-red-100 text-red-800 border-red-200'
+  active: "bg-green-100 text-green-800 border-green-200",
+  inactive: "bg-gray-100 text-gray-800 border-gray-200",
+  suspended: "bg-red-100 text-red-800 border-red-200",
 };
 
 const roleIcons = {
   resident: User,
   staff: Shield,
-  admin: Crown
+  admin: Crown,
 };
 
 const availablePermissions = [
-  { id: 'read_incidents', label: 'View Incidents', description: 'Can view incident reports' },
-  { id: 'write_incidents', label: 'Manage Incidents', description: 'Can create and update incidents' },
-  { id: 'manage_kb', label: 'Manage Knowledge Base', description: 'Can create and edit articles' },
-  { id: 'manage_users', label: 'Manage Users', description: 'Can create and manage user accounts' },
-  { id: 'analytics', label: 'View Analytics', description: 'Can access system analytics' }
+  {
+    id: "read_incidents",
+    label: "View Incidents",
+    description: "Can view incident reports",
+  },
+  {
+    id: "write_incidents",
+    label: "Manage Incidents",
+    description: "Can create and update incidents",
+  },
+  {
+    id: "manage_kb",
+    label: "Manage Knowledge Base",
+    description: "Can create and edit articles",
+  },
+  {
+    id: "manage_users",
+    label: "Manage Users",
+    description: "Can create and manage user accounts",
+  },
+  {
+    id: "analytics",
+    label: "View Analytics",
+    description: "Can access system analytics",
+  },
 ];
 
 export function StaffUsersPage({ user }: StaffUsersPageProps) {
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showNewStaffModal, setShowNewStaffModal] = useState(false);
@@ -108,7 +161,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
     residents: 0,
     staff: 0,
     activeUsers: 0,
-    inactiveUsers: 0
+    inactiveUsers: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -118,18 +171,18 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
   // Form state
   const [createForm, setCreateForm] = useState<CreateUserForm>({
-    name: '',
-    email: '',
-    password: '',
-    role: 'staff',
-    permissions: ['read_incidents', 'write_incidents']
+    name: "",
+    email: "",
+    password: "",
+    role: "staff",
+    permissions: ["read_incidents", "write_incidents"],
   });
 
   const [updateForm, setUpdateForm] = useState<UpdateUserForm>({
-    name: '',
-    role: 'resident',
-    status: 'active',
-    permissions: []
+    name: "",
+    role: "resident",
+    status: "active",
+    permissions: [],
   });
 
   const itemsPerPage = 20;
@@ -149,21 +202,23 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
       const params = {
         page: currentPage,
         limit: itemsPerPage,
-        ...(roleFilter !== 'all' && { role: roleFilter }),
-        ...(statusFilter !== 'all' && { status: statusFilter }),
-        ...(searchQuery && { search: searchQuery })
+        ...(roleFilter !== "all" && { role: roleFilter }),
+        ...(statusFilter !== "all" && { status: statusFilter }),
+        ...(searchQuery && { search: searchQuery }),
       };
 
-      console.log('Loading users with params:', params);
+      console.log("Loading users with params:", params);
 
       const response = await usersAPI.getAll(params);
-      
-      const transformedUsers = (response.users || []).map(userData => ({
+
+      const transformedUsers = (response.users || []).map((userData) => ({
         ...userData,
         id: userData.id || userData._id,
-        status: userData.status || (userData.isActive !== false ? 'active' : 'inactive'),
+        status:
+          userData.status ||
+          (userData.isActive !== false ? "active" : "inactive"),
         createdAt: userData.createdAt || userData.createdOn,
-        updatedAt: userData.updatedAt || userData.lastUpdated
+        updatedAt: userData.updatedAt || userData.lastUpdated,
       }));
 
       setUsers(transformedUsers);
@@ -171,24 +226,31 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
       // Calculate stats
       const totalUsers = transformedUsers.length;
-      const residents = transformedUsers.filter(u => u.role === 'resident').length;
-      const staffCount = transformedUsers.filter(u => u.role === 'staff' || u.role === 'admin').length;
-      const activeUsers = transformedUsers.filter(u => u.status === 'active').length;
-      const inactiveUsers = transformedUsers.filter(u => u.status !== 'active').length;
+      const residents = transformedUsers.filter(
+        (u) => u.role === "resident",
+      ).length;
+      const staffCount = transformedUsers.filter(
+        (u) => u.role === "staff" || u.role === "admin",
+      ).length;
+      const activeUsers = transformedUsers.filter(
+        (u) => u.status === "active",
+      ).length;
+      const inactiveUsers = transformedUsers.filter(
+        (u) => u.status !== "active",
+      ).length;
 
       setStats({
         totalUsers,
         residents,
         staff: staffCount,
         activeUsers,
-        inactiveUsers
+        inactiveUsers,
       });
 
-      console.log('Users loaded successfully:', transformedUsers.length);
-      
+      console.log("Users loaded successfully:", transformedUsers.length);
     } catch (error) {
-      console.error('Failed to load users:', error);
-      toast.error('Failed to load users. Please try again.');
+      console.error("Failed to load users:", error);
+      toast.error("Failed to load users. Please try again.");
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -197,7 +259,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
   const handleCreateUser = async () => {
     if (!createForm.name || !createForm.email || !createForm.password) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -208,17 +270,16 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
         email: createForm.email.trim(),
         password: createForm.password,
         role: createForm.role,
-        permissions: createForm.permissions
+        permissions: createForm.permissions,
       });
-      
-      toast.success('Staff user created successfully');
+
+      toast.success("Staff user created successfully");
       setShowNewStaffModal(false);
       resetCreateForm();
       await loadUsers(true);
-      
     } catch (error) {
-      console.error('Failed to create user:', error);
-      toast.error('Failed to create user. Please try again.');
+      console.error("Failed to create user:", error);
+      toast.error("Failed to create user. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -226,7 +287,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
   const handleUpdateUser = async () => {
     if (!selectedUser || !updateForm.name) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -235,17 +296,16 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
       await usersAPI.updateUser(selectedUser.id, {
         name: updateForm.name.trim(),
         role: updateForm.role,
-        isActive: updateForm.status === 'active',
-        permissions: updateForm.permissions
+        isActive: updateForm.status === "active",
+        permissions: updateForm.permissions,
       });
-      
-      toast.success('User updated successfully');
+
+      toast.success("User updated successfully");
       setShowEditModal(false);
       await loadUsers(true);
-      
     } catch (error) {
-      console.error('Failed to update user:', error);
-      toast.error('Failed to update user. Please try again.');
+      console.error("Failed to update user:", error);
+      toast.error("Failed to update user. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -253,7 +313,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
   const handleDeleteUser = async (userData: UserData) => {
     if (userData.id === user.id) {
-      toast.error('Cannot delete your own account');
+      toast.error("Cannot delete your own account");
       return;
     }
 
@@ -263,11 +323,11 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
     try {
       await usersAPI.deleteUser(userData.id);
-      toast.success('User deleted successfully');
+      toast.success("User deleted successfully");
       await loadUsers(true);
     } catch (error) {
-      console.error('Failed to delete user:', error);
-      toast.error('Failed to delete user. Please try again.');
+      console.error("Failed to delete user:", error);
+      toast.error("Failed to delete user. Please try again.");
     }
   };
 
@@ -277,7 +337,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
       name: userData.name,
       role: userData.role,
       status: userData.status,
-      permissions: userData.permissions || []
+      permissions: userData.permissions || [],
     });
     setShowEditModal(true);
   };
@@ -286,37 +346,37 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
     setSelectedUser(userData);
     setUpdateForm({
       name: userData.name,
-      role: 'staff',
+      role: "staff",
       status: userData.status,
-      permissions: ['read_incidents', 'write_incidents']
+      permissions: ["read_incidents", "write_incidents"],
     });
     setShowPromoteModal(true);
   };
 
   const resetCreateForm = () => {
     setCreateForm({
-      name: '',
-      email: '',
-      password: '',
-      role: 'staff',
-      permissions: ['read_incidents', 'write_incidents']
+      name: "",
+      email: "",
+      password: "",
+      role: "staff",
+      permissions: ["read_incidents", "write_incidents"],
     });
   };
 
   const togglePermission = (permission: string, isCreate: boolean = false) => {
     if (isCreate) {
-      setCreateForm(prev => ({
+      setCreateForm((prev) => ({
         ...prev,
         permissions: prev.permissions.includes(permission)
-          ? prev.permissions.filter(p => p !== permission)
-          : [...prev.permissions, permission]
+          ? prev.permissions.filter((p) => p !== permission)
+          : [...prev.permissions, permission],
       }));
     } else {
-      setUpdateForm(prev => ({
+      setUpdateForm((prev) => ({
         ...prev,
         permissions: prev.permissions.includes(permission)
-          ? prev.permissions.filter(p => p !== permission)
-          : [...prev.permissions, permission]
+          ? prev.permissions.filter((p) => p !== permission)
+          : [...prev.permissions, permission],
       }));
     }
   };
@@ -333,7 +393,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
   const getStatusBadge = (status: string) => {
     return (
-      <Badge className={statusColors[status] || statusColors['active']}>
+      <Badge className={statusColors[status] || statusColors["active"]}>
         {status.toUpperCase()}
       </Badge>
     );
@@ -342,19 +402,30 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
   const GridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {users.map((userData) => (
-        <Card key={userData.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-400">
+        <Card
+          key={userData.id}
+          className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-400"
+        >
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-3 flex-1 min-w-0">
                 <Avatar className="w-12 h-12">
                   <AvatarImage src="" />
                   <AvatarFallback>
-                    {userData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {userData.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <CardTitle className="text-base truncate">{userData.name}</CardTitle>
-                  <p className="text-sm text-slate-600 truncate">{userData.email}</p>
+                  <CardTitle className="text-base truncate">
+                    {userData.name}
+                  </CardTitle>
+                  <p className="text-sm text-slate-600 truncate">
+                    {userData.email}
+                  </p>
                 </div>
               </div>
               <DropdownMenu>
@@ -368,14 +439,16 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                     <Edit className="w-4 h-4 mr-2" />
                     Edit User
                   </DropdownMenuItem>
-                  {userData.role === 'resident' && user.role === 'admin' && (
-                    <DropdownMenuItem onClick={() => handlePromoteUser(userData)}>
+                  {userData.role === "resident" && user.role === "admin" && (
+                    <DropdownMenuItem
+                      onClick={() => handlePromoteUser(userData)}
+                    >
                       <Crown className="w-4 h-4 mr-2" />
                       Promote to Staff
                     </DropdownMenuItem>
                   )}
-                  {user.role === 'admin' && userData.id !== user.id && (
-                    <DropdownMenuItem 
+                  {user.role === "admin" && userData.id !== user.id && (
+                    <DropdownMenuItem
                       onClick={() => handleDeleteUser(userData)}
                       className="text-red-600"
                     >
@@ -395,7 +468,10 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
             <div className="text-sm text-slate-600 space-y-1">
               <p>Joined: {new Date(userData.createdAt).toLocaleDateString()}</p>
               {userData.lastActive && (
-                <p>Last Active: {new Date(userData.lastActive).toLocaleDateString()}</p>
+                <p>
+                  Last Active:{" "}
+                  {new Date(userData.lastActive).toLocaleDateString()}
+                </p>
               )}
               {userData.permissions && userData.permissions.length > 0 && (
                 <p>Permissions: {userData.permissions.length} assigned</p>
@@ -423,12 +499,17 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Users Management</h1>
-          <p className="text-slate-600">Manage residents and staff accounts • Total: {stats.totalUsers} users</p>
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Users Management
+          </h1>
+          <p className="text-slate-600">
+            Manage residents and staff accounts • Total: {stats.totalUsers}{" "}
+            users
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => loadUsers(true)}
             disabled={isRefreshing}
           >
@@ -439,7 +520,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
             )}
             Refresh
           </Button>
-          {user.role === 'admin' && (
+          {user.role === "admin" && (
             <Button onClick={() => setShowNewStaffModal(true)}>
               <UserPlus className="w-4 h-4 mr-2" />
               Add Staff User
@@ -511,7 +592,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={roleFilter} onValueChange={setRoleFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Role" />
@@ -538,17 +619,17 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
             <div className="flex items-center gap-1 bg-slate-100 rounded-[3rem] p-1">
               <Button
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                variant={viewMode === "table" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('table')}
+                onClick={() => setViewMode("table")}
                 className="h-7 px-2"
               >
                 <List className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className="h-7 px-2"
               >
                 <Grid className="w-4 h-4" />
@@ -564,15 +645,16 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
           <div className="text-6xl mb-4 opacity-20">
             <User className="h-16 w-16 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-slate-800 mb-2">No users found</h3>
+          <h3 className="text-lg font-medium text-slate-800 mb-2">
+            No users found
+          </h3>
           <p className="text-slate-600 mb-6">
-            {searchQuery || roleFilter !== 'all' || statusFilter !== 'all' 
-              ? 'Try adjusting your filters or search terms'
-              : 'No users have been registered yet'
-            }
+            {searchQuery || roleFilter !== "all" || statusFilter !== "all"
+              ? "Try adjusting your filters or search terms"
+              : "No users have been registered yet"}
           </p>
         </div>
-      ) : viewMode === 'table' ? (
+      ) : viewMode === "table" ? (
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -596,18 +678,28 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                           <Avatar className="w-8 h-8">
                             <AvatarImage src="" />
                             <AvatarFallback>
-                              {userData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                              {userData.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <span className="font-medium">{userData.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-48 truncate">{userData.email}</TableCell>
+                      <TableCell className="max-w-48 truncate">
+                        {userData.email}
+                      </TableCell>
                       <TableCell>{getRoleBadge(userData.role)}</TableCell>
                       <TableCell>{getStatusBadge(userData.status)}</TableCell>
-                      <TableCell>{new Date(userData.createdAt).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        {userData.lastActive ? new Date(userData.lastActive).toLocaleDateString() : 'Never'}
+                        {new Date(userData.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {userData.lastActive
+                          ? new Date(userData.lastActive).toLocaleDateString()
+                          : "Never"}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -617,25 +709,31 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEditUser(userData)}>
+                            <DropdownMenuItem
+                              onClick={() => handleEditUser(userData)}
+                            >
                               <Edit className="w-4 h-4 mr-2" />
                               Edit User
                             </DropdownMenuItem>
-                            {userData.role === 'resident' && user.role === 'admin' && (
-                              <DropdownMenuItem onClick={() => handlePromoteUser(userData)}>
-                                <Crown className="w-4 h-4 mr-2" />
-                                Promote to Staff
-                              </DropdownMenuItem>
-                            )}
-                            {user.role === 'admin' && userData.id !== user.id && (
-                              <DropdownMenuItem 
-                                onClick={() => handleDeleteUser(userData)}
-                                className="text-red-600"
-                              >
-                                <UserX className="w-4 h-4 mr-2" />
-                                Delete User
-                              </DropdownMenuItem>
-                            )}
+                            {userData.role === "resident" &&
+                              user.role === "admin" && (
+                                <DropdownMenuItem
+                                  onClick={() => handlePromoteUser(userData)}
+                                >
+                                  <Crown className="w-4 h-4 mr-2" />
+                                  Promote to Staff
+                                </DropdownMenuItem>
+                              )}
+                            {user.role === "admin" &&
+                              userData.id !== user.id && (
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteUser(userData)}
+                                  className="text-red-600"
+                                >
+                                  <UserX className="w-4 h-4 mr-2" />
+                                  Delete User
+                                </DropdownMenuItem>
+                              )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -659,32 +757,41 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
           <div className="space-y-4">
             <div>
               <Label htmlFor="create-name">Name *</Label>
-              <Input 
+              <Input
                 id="create-name"
                 value={createForm.name}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({ ...prev, name: e.target.value }))
+                }
                 placeholder="Enter full name"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="create-email">Email *</Label>
-              <Input 
+              <Input
                 id="create-email"
                 type="email"
                 value={createForm.email}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, email: e.target.value }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({ ...prev, email: e.target.value }))
+                }
                 placeholder="Enter email address"
               />
             </div>
 
             <div>
               <Label htmlFor="create-password">Temporary Password *</Label>
-              <Input 
+              <Input
                 id="create-password"
                 type="password"
                 value={createForm.password}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, password: e.target.value }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
                 placeholder="Min 6 characters"
                 minLength={6}
               />
@@ -692,9 +799,11 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
             <div>
               <Label htmlFor="create-role">Role</Label>
-              <Select 
+              <Select
                 value={createForm.role}
-                onValueChange={(value: 'staff' | 'admin') => setCreateForm(prev => ({ ...prev, role: value }))}
+                onValueChange={(value: "staff" | "admin") =>
+                  setCreateForm((prev) => ({ ...prev, role: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -711,13 +820,17 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
               <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
                 {availablePermissions.map((perm) => (
                   <div key={perm.id} className="flex items-start space-x-2">
-                    <Checkbox 
+                    <Checkbox
                       checked={createForm.permissions.includes(perm.id)}
                       onCheckedChange={() => togglePermission(perm.id, true)}
                     />
                     <div className="flex-1">
-                      <Label className="text-sm font-medium">{perm.label}</Label>
-                      <p className="text-xs text-slate-500">{perm.description}</p>
+                      <Label className="text-sm font-medium">
+                        {perm.label}
+                      </Label>
+                      <p className="text-xs text-slate-500">
+                        {perm.description}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -725,24 +838,21 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
             </div>
 
             <div className="flex gap-2 justify-end pt-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowNewStaffModal(false)}
                 disabled={isSaving}
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleCreateUser}
-                disabled={isSaving}
-              >
+              <Button onClick={handleCreateUser} disabled={isSaving}>
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Creating...
                   </>
                 ) : (
-                  'Create Staff User'
+                  "Create Staff User"
                 )}
               </Button>
             </div>
@@ -760,16 +870,18 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="edit-name">Name *</Label>
-                <Input 
+                <Input
                   id="edit-name"
                   value={updateForm.name}
-                  onChange={(e) => setUpdateForm(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setUpdateForm((prev) => ({ ...prev, name: e.target.value }))
+                  }
                 />
               </div>
 
               <div>
                 <Label htmlFor="edit-email">Email</Label>
-                <Input 
+                <Input
                   id="edit-email"
                   value={selectedUser.email}
                   disabled
@@ -780,10 +892,10 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="edit-role">Role</Label>
-                  <Select 
+                  <Select
                     value={updateForm.role}
-                    onValueChange={(value: 'resident' | 'staff' | 'admin') => 
-                      setUpdateForm(prev => ({ ...prev, role: value }))
+                    onValueChange={(value: "resident" | "staff" | "admin") =>
+                      setUpdateForm((prev) => ({ ...prev, role: value }))
                     }
                   >
                     <SelectTrigger>
@@ -799,11 +911,11 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
 
                 <div>
                   <Label htmlFor="edit-status">Status</Label>
-                  <Select 
+                  <Select
                     value={updateForm.status}
-                    onValueChange={(value: 'active' | 'inactive' | 'suspended') => 
-                      setUpdateForm(prev => ({ ...prev, status: value }))
-                    }
+                    onValueChange={(
+                      value: "active" | "inactive" | "suspended",
+                    ) => setUpdateForm((prev) => ({ ...prev, status: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -817,19 +929,25 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                 </div>
               </div>
 
-              {(updateForm.role === 'staff' || updateForm.role === 'admin') && (
+              {(updateForm.role === "staff" || updateForm.role === "admin") && (
                 <div>
                   <Label>Permissions</Label>
                   <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
                     {availablePermissions.map((perm) => (
                       <div key={perm.id} className="flex items-start space-x-2">
-                        <Checkbox 
+                        <Checkbox
                           checked={updateForm.permissions.includes(perm.id)}
-                          onCheckedChange={() => togglePermission(perm.id, false)}
+                          onCheckedChange={() =>
+                            togglePermission(perm.id, false)
+                          }
                         />
                         <div className="flex-1">
-                          <Label className="text-sm font-medium">{perm.label}</Label>
-                          <p className="text-xs text-slate-500">{perm.description}</p>
+                          <Label className="text-sm font-medium">
+                            {perm.label}
+                          </Label>
+                          <p className="text-xs text-slate-500">
+                            {perm.description}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -838,24 +956,21 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
               )}
 
               <div className="flex gap-2 justify-end pt-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setShowEditModal(false)}
                   disabled={isSaving}
                 >
                   Cancel
                 </Button>
-                <Button 
-                  onClick={handleUpdateUser}
-                  disabled={isSaving}
-                >
+                <Button onClick={handleUpdateUser} disabled={isSaving}>
                   {isSaving ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       Updating...
                     </>
                   ) : (
-                    'Update User'
+                    "Update User"
                   )}
                 </Button>
               </div>
@@ -873,21 +988,26 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
           {selectedUser && (
             <div className="space-y-4">
               <p className="text-slate-600">
-                Are you sure you want to promote <strong>{selectedUser.name}</strong> to staff?
+                Are you sure you want to promote{" "}
+                <strong>{selectedUser.name}</strong> to staff?
               </p>
-              
+
               <div>
                 <Label>Initial Permissions</Label>
                 <div className="space-y-2 mt-2">
                   {availablePermissions.slice(0, 3).map((perm) => (
                     <div key={perm.id} className="flex items-start space-x-2">
-                      <Checkbox 
+                      <Checkbox
                         checked={updateForm.permissions.includes(perm.id)}
                         onCheckedChange={() => togglePermission(perm.id, false)}
                       />
                       <div className="flex-1">
-                        <Label className="text-sm font-medium">{perm.label}</Label>
-                        <p className="text-xs text-slate-500">{perm.description}</p>
+                        <Label className="text-sm font-medium">
+                          {perm.label}
+                        </Label>
+                        <p className="text-xs text-slate-500">
+                          {perm.description}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -895,14 +1015,14 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
               </div>
 
               <div className="flex gap-2 justify-end pt-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setShowPromoteModal(false)}
                   disabled={isSaving}
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={async () => {
                     setShowPromoteModal(false);
                     await handleUpdateUser();
@@ -915,7 +1035,7 @@ export function StaffUsersPage({ user }: StaffUsersPageProps) {
                       Promoting...
                     </>
                   ) : (
-                    'Promote User'
+                    "Promote User"
                   )}
                 </Button>
               </div>

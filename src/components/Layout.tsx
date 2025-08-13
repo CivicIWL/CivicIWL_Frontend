@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import { Building2, MessageSquare, AlertTriangle, User, Home, Menu, LogOut } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import {
+  Building2,
+  MessageSquare,
+  AlertTriangle,
+  User,
+  Home,
+  Menu,
+  LogOut,
+} from "lucide-react";
 
 type User = {
   id: string;
@@ -9,7 +17,13 @@ type User = {
   email: string;
 };
 
-type Page = 'login' | 'signup' | 'dashboard' | 'chatbot' | 'incidents' | 'profile';
+type Page =
+  | "login"
+  | "signup"
+  | "dashboard"
+  | "chatbot"
+  | "incidents"
+  | "profile";
 
 interface LayoutProps {
   user: User;
@@ -19,14 +33,20 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function Layout({ user, currentPage, onNavigate, onLogout, children }: LayoutProps) {
+export function Layout({
+  user,
+  currentPage,
+  onNavigate,
+  onLogout,
+  children,
+}: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'chatbot', label: 'Chatbot', icon: MessageSquare },
-    { id: 'incidents', label: 'Reported Incidents', icon: AlertTriangle },
-    { id: 'profile', label: 'Profile', icon: User },
+    { id: "dashboard", label: "Dashboard", icon: Home },
+    { id: "chatbot", label: "Chatbot", icon: MessageSquare },
+    { id: "incidents", label: "Reported Incidents", icon: AlertTriangle },
+    { id: "profile", label: "Profile", icon: User },
   ];
 
   const SidebarContent = () => (
@@ -72,8 +92,8 @@ export function Layout({ user, currentPage, onNavigate, onLogout, children }: La
                   }}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-[3rem] transition-colors ${
                     isActive
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                   }`}
                 >
                   <Icon className="h-5 w-5" />
@@ -132,9 +152,7 @@ export function Layout({ user, currentPage, onNavigate, onLogout, children }: La
 
       {/* Main Content */}
       <div className="lg:pl-80">
-        <main className="p-4 lg:p-8">
-          {children}
-        </main>
+        <main className="p-4 lg:p-8">{children}</main>
       </div>
     </div>
   );

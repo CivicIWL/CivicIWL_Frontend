@@ -1,27 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import { Layout } from './Layout';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Badge } from './ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination';
-import { Search, Plus, Eye, Grid, List, Calendar, MapPin, AlertTriangle, Loader2, RefreshCw, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
-import { incidentsAPI } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { Layout } from "./Layout";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Badge } from "./ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./ui/pagination";
+import {
+  Search,
+  Plus,
+  Eye,
+  Grid,
+  List,
+  Calendar,
+  MapPin,
+  AlertTriangle,
+  Loader2,
+  RefreshCw,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+import { incidentsAPI } from "../services/api";
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role?: 'resident' | 'staff' | 'admin';
+  role?: "resident" | "staff" | "admin";
 };
 
-type Page = 'login' | 'signup' | 'dashboard' | 'chatbot' | 'incidents' | 'profile';
+type Page =
+  | "login"
+  | "signup"
+  | "dashboard"
+  | "chatbot"
+  | "incidents"
+  | "profile";
 
 type Incident = {
   id: string;
@@ -29,8 +76,8 @@ type Incident = {
   description: string;
   category: string;
   location: string;
-  status: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+  status: "NEW" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   submittedOn: string;
   lastUpdated: string;
   contactInfo?: string;
@@ -46,18 +93,24 @@ interface ReportedIncidentsProps {
   onLogout: () => void;
 }
 
-export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncidentsProps) {
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [priorityFilter, setPriorityFilter] = useState('all');
+export function ReportedIncidents({
+  user,
+  onNavigate,
+  onLogout,
+}: ReportedIncidentsProps) {
+  const [viewMode, setViewMode] = useState<"table" | "grid">("grid");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
-  const [statusCheckId, setStatusCheckId] = useState('');
-  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
-  
+  const [statusCheckId, setStatusCheckId] = useState("");
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
+    null,
+  );
+
   // Loading states
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,20 +121,26 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   // Report form state
   const [reportForm, setReportForm] = useState({
-    title: '',
-    description: '',
-    category: '',
-    location: '',
-    priority: 'MEDIUM',
+    title: "",
+    description: "",
+    category: "",
+    location: "",
+    priority: "MEDIUM",
     contactInfo: user.email,
-    images: [] as File[]
+    images: [] as File[],
   });
 
   // Kenya-specific categories matching your backend
   const categories = [
-    'Infrastructure', 'Transportation', 'Safety', 'Environment', 
-    'Utilities', 'Parks & Recreation', 'Public Property', 
-    'Water & Utilities', 'Road Maintenance'
+    "Infrastructure",
+    "Transportation",
+    "Safety",
+    "Environment",
+    "Utilities",
+    "Parks & Recreation",
+    "Public Property",
+    "Water & Utilities",
+    "Road Maintenance",
   ];
 
   const itemsPerPage = 12;
@@ -103,44 +162,49 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
         page: currentPage,
         limit: itemsPerPage,
         ...(searchTerm && { search: searchTerm }),
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        ...(statusFilter !== 'all' && { status: statusFilter }),
-        ...(priorityFilter !== 'all' && { priority: priorityFilter })
+        ...(categoryFilter !== "all" && { category: categoryFilter }),
+        ...(statusFilter !== "all" && { status: statusFilter }),
+        ...(priorityFilter !== "all" && { priority: priorityFilter }),
       };
 
-      console.log('📡 Loading incidents with params:', params);
+      console.log("📡 Loading incidents with params:", params);
 
       const response = await incidentsAPI.getAll(params);
-      
+
       // Handle different response formats from your backend
       const incidentsList = response.incidents || response.data || response;
       const pagination = response.pagination || {};
-      
+
       // Transform backend data to match frontend expectations
-      const transformedIncidents = incidentsList.map(incident => ({
+      const transformedIncidents = incidentsList.map((incident) => ({
         ...incident,
         id: incident.id || incident._id,
-        incidentId: incident.incidentId || `INC-${(incident.id || incident._id).slice(-6).toUpperCase()}`,
+        incidentId:
+          incident.incidentId ||
+          `INC-${(incident.id || incident._id).slice(-6).toUpperCase()}`,
         submittedOn: incident.createdAt || incident.submittedOn,
         lastUpdated: incident.updatedAt || incident.lastUpdated,
-        priority: incident.priority || 'MEDIUM'
+        priority: incident.priority || "MEDIUM",
       }));
-      
+
       setIncidents(transformedIncidents);
       setTotalCount(pagination.total || transformedIncidents.length);
-      setTotalPages(pagination.pages || Math.ceil(transformedIncidents.length / itemsPerPage));
-      
-      console.log('✅ Incidents loaded:', transformedIncidents.length);
-      
+      setTotalPages(
+        pagination.pages ||
+          Math.ceil(transformedIncidents.length / itemsPerPage),
+      );
+
+      console.log("✅ Incidents loaded:", transformedIncidents.length);
     } catch (error) {
-      console.error('❌ Failed to load incidents:', error);
-      
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          'Failed to load incidents';
-      
+      console.error("❌ Failed to load incidents:", error);
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to load incidents";
+
       toast.error(`${errorMessage} 😞`);
-      
+
       // Set empty state on error
       setIncidents([]);
       setTotalCount(0);
@@ -153,9 +217,14 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   const handleReportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!reportForm.title || !reportForm.description || !reportForm.category || !reportForm.location) {
-      toast.error('Please fill in all required fields 📝');
+
+    if (
+      !reportForm.title ||
+      !reportForm.description ||
+      !reportForm.category ||
+      !reportForm.location
+    ) {
+      toast.error("Please fill in all required fields 📝");
       return;
     }
 
@@ -169,50 +238,58 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
         category: reportForm.category,
         location: reportForm.location.trim(),
         contactInfo: {
-          email: reportForm.contactInfo.includes('@') ? reportForm.contactInfo : user.email,
-          phone: !reportForm.contactInfo.includes('@') ? reportForm.contactInfo : undefined
+          email: reportForm.contactInfo.includes("@")
+            ? reportForm.contactInfo
+            : user.email,
+          phone: !reportForm.contactInfo.includes("@")
+            ? reportForm.contactInfo
+            : undefined,
         },
-        priority: reportForm.priority
+        priority: reportForm.priority,
       };
 
-      console.log('📤 Submitting incident:', incidentData);
+      console.log("📤 Submitting incident:", incidentData);
 
       const response = await incidentsAPI.create(incidentData);
-      
-      const referenceId = response.incidentId || `INC-${response.id?.slice(-6)?.toUpperCase()}`;
-      
-      toast.success(`Incident reported successfully! 🎉 Reference ID: ${referenceId}`, {
-        duration: 5000,
-        action: {
-          label: 'Copy ID',
-          onClick: () => navigator.clipboard.writeText(referenceId)
-        }
-      });
-      
+
+      const referenceId =
+        response.incidentId || `INC-${response.id?.slice(-6)?.toUpperCase()}`;
+
+      toast.success(
+        `Incident reported successfully! 🎉 Reference ID: ${referenceId}`,
+        {
+          duration: 5000,
+          action: {
+            label: "Copy ID",
+            onClick: () => navigator.clipboard.writeText(referenceId),
+          },
+        },
+      );
+
       // Reset form and close modal
       setReportForm({
-        title: '',
-        description: '',
-        category: '',
-        location: '',
-        priority: 'MEDIUM',
+        title: "",
+        description: "",
+        category: "",
+        location: "",
+        priority: "MEDIUM",
         contactInfo: user.email,
-        images: []
+        images: [],
       });
       setShowReportModal(false);
-      
+
       // Refresh incidents list
       await loadIncidents(true);
-      
     } catch (error) {
-      console.error('❌ Failed to submit incident:', error);
-      
+      console.error("❌ Failed to submit incident:", error);
+
       // Parse error message from backend
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.message || 
-                          'Failed to submit incident. Please try again.';
-      
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to submit incident. Please try again.";
+
       toast.error(`Submission failed: ${errorMessage} 😞`);
     } finally {
       setIsSubmitting(false);
@@ -221,53 +298,55 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   const handleStatusCheck = async () => {
     if (!statusCheckId.trim()) {
-      toast.error('Please enter a reference ID 🔍');
+      toast.error("Please enter a reference ID 🔍");
       return;
     }
 
     try {
-      console.log('🔍 Checking status for:', statusCheckId);
-      
+      console.log("🔍 Checking status for:", statusCheckId);
+
       // Try both formats - with and without INC- prefix
       let searchId = statusCheckId.trim().toUpperCase();
-      if (!searchId.startsWith('INC-')) {
+      if (!searchId.startsWith("INC-")) {
         searchId = `INC-${searchId}`;
       }
-      
+
       // Use the public status endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/incidents/status/${searchId.replace('INC-', '')}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/incidents/status/${searchId.replace("INC-", "")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
       if (!response.ok) {
-        throw new Error('Incident not found');
+        throw new Error("Incident not found");
       }
-      
+
       const incident = await response.json();
-      
+
       // Create a detailed status message
       const statusMessage = `Status: ${incident.status} | Last Updated: ${new Date(incident.lastUpdated).toLocaleDateString()}`;
-      
+
       toast.success(`Found! 📋 ${statusMessage}`, {
         duration: 8000,
-        description: `Incident: ${incident.title}`
+        description: `Incident: ${incident.title}`,
       });
-      
+
       // Optionally set as selected incident for detailed view
       setSelectedIncident({
         ...incident,
         submittedOn: incident.submittedOn,
-        lastUpdated: incident.lastUpdated
+        lastUpdated: incident.lastUpdated,
       });
-      
     } catch (error) {
-      console.error('❌ Status check failed:', error);
-      toast.error('Incident not found. Please check your reference ID 🔍');
+      console.error("❌ Status check failed:", error);
+      toast.error("Incident not found. Please check your reference ID 🔍");
     } finally {
-      setStatusCheckId('');
+      setStatusCheckId("");
       setShowStatusModal(false);
     }
   };
@@ -278,30 +357,30 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      'NEW': { 
-        icon: '🆕', 
-        className: 'bg-orange-100 text-orange-800 border-orange-200',
-        text: 'New'
+      NEW: {
+        icon: "🆕",
+        className: "bg-orange-100 text-orange-800 border-orange-200",
+        text: "New",
       },
-      'IN_PROGRESS': { 
-        icon: '⏳', 
-        className: 'bg-blue-100 text-blue-800 border-blue-200',
-        text: 'In Progress'
+      IN_PROGRESS: {
+        icon: "⏳",
+        className: "bg-blue-100 text-blue-800 border-blue-200",
+        text: "In Progress",
       },
-      'RESOLVED': { 
-        icon: '✅', 
-        className: 'bg-green-100 text-green-800 border-green-200',
-        text: 'Resolved'
+      RESOLVED: {
+        icon: "✅",
+        className: "bg-green-100 text-green-800 border-green-200",
+        text: "Resolved",
       },
-      'CLOSED': { 
-        icon: '🔒', 
-        className: 'bg-gray-100 text-gray-800 border-gray-200',
-        text: 'Closed'
-      }
+      CLOSED: {
+        icon: "🔒",
+        className: "bg-gray-100 text-gray-800 border-gray-200",
+        text: "Closed",
+      },
     };
 
-    const badge = badges[status] || badges['NEW'];
-    
+    const badge = badges[status] || badges["NEW"];
+
     return (
       <Badge className={`${badge.className} flex items-center gap-1`}>
         <span>{badge.icon}</span>
@@ -312,16 +391,18 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   const getPriorityBadge = (priority: string) => {
     const badges = {
-      'LOW': { icon: '🟢', className: 'bg-green-50 text-green-700' },
-      'MEDIUM': { icon: '🟡', className: 'bg-yellow-50 text-yellow-700' },
-      'HIGH': { icon: '🟠', className: 'bg-orange-50 text-orange-700' },
-      'URGENT': { icon: '🔴', className: 'bg-red-50 text-red-700' }
+      LOW: { icon: "🟢", className: "bg-green-50 text-green-700" },
+      MEDIUM: { icon: "🟡", className: "bg-yellow-50 text-yellow-700" },
+      HIGH: { icon: "🟠", className: "bg-orange-50 text-orange-700" },
+      URGENT: { icon: "🔴", className: "bg-red-50 text-red-700" },
     };
 
-    const badge = badges[priority] || badges['MEDIUM'];
-    
+    const badge = badges[priority] || badges["MEDIUM"];
+
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${badge.className}`}>
+      <span
+        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${badge.className}`}
+      >
         {badge.icon} {priority}
       </span>
     );
@@ -329,30 +410,39 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
   const getCategoryIcon = (category: string) => {
     const icons = {
-      'Infrastructure': '🏗️',
-      'Transportation': '🚌',
-      'Safety': '🚨',
-      'Environment': '🌍',
-      'Utilities': '⚡',
-      'Parks & Recreation': '🌳',
-      'Public Property': '🏛️',
-      'Water & Utilities': '💧',
-      'Road Maintenance': '🛣️'
+      Infrastructure: "🏗️",
+      Transportation: "🚌",
+      Safety: "🚨",
+      Environment: "🌍",
+      Utilities: "⚡",
+      "Parks & Recreation": "🌳",
+      "Public Property": "🏛️",
+      "Water & Utilities": "💧",
+      "Road Maintenance": "🛣️",
     };
-    return icons[category] || '📋';
+    return icons[category] || "📋";
   };
 
   const GridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {incidents.map((incident) => (
-        <Card key={incident.id} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-400 bg-white/90 backdrop-blur-sm">
+        <Card
+          key={incident.id}
+          className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-400 bg-white/90 backdrop-blur-sm"
+        >
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-2">
-                <span className="text-xl mt-1">{getCategoryIcon(incident.category)}</span>
+                <span className="text-xl mt-1">
+                  {getCategoryIcon(incident.category)}
+                </span>
                 <div className="flex-1">
-                  <CardTitle className="text-lg text-slate-800 leading-tight">{incident.title}</CardTitle>
-                  <p className="text-xs text-slate-500 mt-1">ID: {incident.id}</p>
+                  <CardTitle className="text-lg text-slate-800 leading-tight">
+                    {incident.title}
+                  </CardTitle>
+                  <p className="text-xs text-slate-500 mt-1">
+                    ID: {incident.id}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col gap-1 items-end">
@@ -362,8 +452,10 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-slate-600 leading-relaxed">{incident.description}</p>
-            
+            <p className="text-sm text-slate-600 leading-relaxed">
+              {incident.description}
+            </p>
+
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2 text-slate-600">
                 <span>📍</span>
@@ -371,11 +463,16 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
               </div>
               <div className="flex items-center gap-2 text-slate-600">
                 <span>📅</span>
-                <span>Submitted: {new Date(incident.submittedOn).toLocaleDateString()}</span>
+                <span>
+                  Submitted:{" "}
+                  {new Date(incident.submittedOn).toLocaleDateString()}
+                </span>
               </div>
               <div className="flex items-center gap-2 text-slate-600">
                 <span>🔄</span>
-                <span>Updated: {new Date(incident.lastUpdated).toLocaleDateString()}</span>
+                <span>
+                  Updated: {new Date(incident.lastUpdated).toLocaleDateString()}
+                </span>
               </div>
               {incident.estimatedResolution && (
                 <div className="flex items-center gap-2 text-slate-600">
@@ -408,9 +505,13 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
   );
 
   return (
-    <Layout user={user} currentPage="incidents" onNavigate={onNavigate} onLogout={onLogout}>
+    <Layout
+      user={user}
+      currentPage="incidents"
+      onNavigate={onNavigate}
+      onLogout={onLogout}
+    >
       <div className="space-y-6">
-        
         {/* Header with Stats */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -421,10 +522,10 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
               🏛️ Track your civic reports • Total: {totalCount} incidents
             </p>
           </div>
-          
+
           <div className="flex gap-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleRefresh}
               disabled={isRefreshing}
               className="hover:bg-emerald-50"
@@ -450,23 +551,32 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     🔍 Check Incident Status
                   </DialogTitle>
                   <DialogDescription>
-                    Enter your reference ID to check the status of your reported incident.
+                    Enter your reference ID to check the status of your reported
+                    incident.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="statusId" className="flex items-center gap-1">
+                    <Label
+                      htmlFor="statusId"
+                      className="flex items-center gap-1"
+                    >
                       📋 Reference ID
                     </Label>
                     <Input
                       id="statusId"
                       placeholder="Enter reference ID (e.g., INC-001)"
                       value={statusCheckId}
-                      onChange={(e) => setStatusCheckId(e.target.value.toUpperCase())}
+                      onChange={(e) =>
+                        setStatusCheckId(e.target.value.toUpperCase())
+                      }
                       className="font-mono"
                     />
                   </div>
-                  <Button onClick={handleStatusCheck} className="w-full bg-emerald-600 hover:bg-emerald-700">
+                  <Button
+                    onClick={handleStatusCheck}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                  >
                     🔍 Check Status
                   </Button>
                 </div>
@@ -486,7 +596,8 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     📝 Report New Incident
                   </DialogTitle>
                   <DialogDescription>
-                    Help improve your community by reporting issues to county authorities.
+                    Help improve your community by reporting issues to county
+                    authorities.
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleReportSubmit} className="space-y-4">
@@ -497,7 +608,9 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     <Input
                       id="title"
                       value={reportForm.title}
-                      onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
+                      onChange={(e) =>
+                        setReportForm({ ...reportForm, title: e.target.value })
+                      }
                       placeholder="Brief description of the issue"
                       required
                       maxLength={100}
@@ -509,12 +622,17 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label htmlFor="category" className="flex items-center gap-1">
+                      <Label
+                        htmlFor="category"
+                        className="flex items-center gap-1"
+                      >
                         🏷️ Category *
                       </Label>
                       <Select
                         value={reportForm.category}
-                        onValueChange={(value) => setReportForm({ ...reportForm, category: value })}
+                        onValueChange={(value) =>
+                          setReportForm({ ...reportForm, category: value })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
@@ -530,12 +648,17 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     </div>
 
                     <div>
-                      <Label htmlFor="priority" className="flex items-center gap-1">
+                      <Label
+                        htmlFor="priority"
+                        className="flex items-center gap-1"
+                      >
                         ⚡ Priority
                       </Label>
                       <Select
                         value={reportForm.priority}
-                        onValueChange={(value) => setReportForm({ ...reportForm, priority: value })}
+                        onValueChange={(value) =>
+                          setReportForm({ ...reportForm, priority: value })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -551,26 +674,42 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                   </div>
 
                   <div>
-                    <Label htmlFor="location" className="flex items-center gap-1">
+                    <Label
+                      htmlFor="location"
+                      className="flex items-center gap-1"
+                    >
                       📍 Location *
                     </Label>
                     <Input
                       id="location"
                       value={reportForm.location}
-                      onChange={(e) => setReportForm({ ...reportForm, location: e.target.value })}
+                      onChange={(e) =>
+                        setReportForm({
+                          ...reportForm,
+                          location: e.target.value,
+                        })
+                      }
                       placeholder="e.g., CBD, Westlands, Kasarani..."
                       required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="description" className="flex items-center gap-1">
+                    <Label
+                      htmlFor="description"
+                      className="flex items-center gap-1"
+                    >
                       📝 Description *
                     </Label>
                     <Textarea
                       id="description"
                       value={reportForm.description}
-                      onChange={(e) => setReportForm({ ...reportForm, description: e.target.value })}
+                      onChange={(e) =>
+                        setReportForm({
+                          ...reportForm,
+                          description: e.target.value,
+                        })
+                      }
                       placeholder="Provide detailed information about the issue, when it started, and how it affects the community..."
                       required
                       rows={4}
@@ -582,13 +721,21 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                   </div>
 
                   <div>
-                    <Label htmlFor="contact" className="flex items-center gap-1">
+                    <Label
+                      htmlFor="contact"
+                      className="flex items-center gap-1"
+                    >
                       📞 Contact Info
                     </Label>
                     <Input
                       id="contact"
                       value={reportForm.contactInfo}
-                      onChange={(e) => setReportForm({ ...reportForm, contactInfo: e.target.value })}
+                      onChange={(e) =>
+                        setReportForm({
+                          ...reportForm,
+                          contactInfo: e.target.value,
+                        })
+                      }
                       placeholder="Phone number or email for updates"
                     />
                   </div>
@@ -614,8 +761,8 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     )}
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700"
                     disabled={isSubmitting}
                   >
@@ -625,9 +772,7 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                         Submitting... ⏳
                       </>
                     ) : (
-                      <>
-                        📤 Submit Report
-                      </>
+                      <>📤 Submit Report</>
                     )}
                   </Button>
                 </form>
@@ -652,7 +797,10 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
                   <SelectTrigger className="w-48">
                     <SelectValue placeholder="🏷️ Category" />
                   </SelectTrigger>
@@ -679,7 +827,10 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                   </SelectContent>
                 </Select>
 
-                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <Select
+                  value={priorityFilter}
+                  onValueChange={setPriorityFilter}
+                >
                   <SelectTrigger className="w-32">
                     <SelectValue placeholder="⚡ Priority" />
                   </SelectTrigger>
@@ -694,17 +845,17 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
                 <div className="flex border border-slate-200 rounded-[3rem] bg-white">
                   <Button
-                    variant={viewMode === 'table' ? 'default' : 'ghost'}
+                    variant={viewMode === "table" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setViewMode('table')}
+                    onClick={() => setViewMode("table")}
                     className="rounded-r-none"
                   >
                     <List className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    variant={viewMode === "grid" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => setViewMode("grid")}
                     className="rounded-l-none"
                   >
                     <Grid className="h-4 w-4" />
@@ -725,21 +876,24 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
         ) : incidents.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🤷‍♂️</div>
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">No incidents found</h3>
+            <h3 className="text-xl font-semibold text-slate-800 mb-2">
+              No incidents found
+            </h3>
             <p className="text-slate-600 mb-6">
-              {searchTerm || categoryFilter !== 'all' || statusFilter !== 'all' 
-                ? 'Try adjusting your filters or search terms'
-                : 'No incidents have been reported yet'
-              }
+              {searchTerm || categoryFilter !== "all" || statusFilter !== "all"
+                ? "Try adjusting your filters or search terms"
+                : "No incidents have been reported yet"}
             </p>
-            {(searchTerm || categoryFilter !== 'all' || statusFilter !== 'all') && (
-              <Button 
-                variant="outline" 
+            {(searchTerm ||
+              categoryFilter !== "all" ||
+              statusFilter !== "all") && (
+              <Button
+                variant="outline"
                 onClick={() => {
-                  setSearchTerm('');
-                  setCategoryFilter('all');
-                  setStatusFilter('all');
-                  setPriorityFilter('all');
+                  setSearchTerm("");
+                  setCategoryFilter("all");
+                  setStatusFilter("all");
+                  setPriorityFilter("all");
                 }}
               >
                 🔄 Clear Filters
@@ -749,40 +903,78 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
         ) : (
           <>
             {/* Content */}
-            {viewMode === 'table' ? (
+            {viewMode === "table" ? (
               <Card className="overflow-hidden">
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-slate-50">
-                          <TableHead className="font-semibold">📄 Title</TableHead>
-                          <TableHead className="font-semibold">🏷️ Category</TableHead>
-                          <TableHead className="font-semibold">📍 Location</TableHead>
-                          <TableHead className="font-semibold">📊 Status</TableHead>
-                          <TableHead className="font-semibold">⚡ Priority</TableHead>
-                          <TableHead className="font-semibold">📅 Submitted</TableHead>
-                          <TableHead className="font-semibold">🔄 Updated</TableHead>
+                          <TableHead className="font-semibold">
+                            📄 Title
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            🏷️ Category
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            📍 Location
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            📊 Status
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            ⚡ Priority
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            📅 Submitted
+                          </TableHead>
+                          <TableHead className="font-semibold">
+                            🔄 Updated
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {incidents.map((incident) => (
-                          <TableRow key={incident.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => setSelectedIncident(incident)}>
+                          <TableRow
+                            key={incident.id}
+                            className="hover:bg-slate-50 cursor-pointer"
+                            onClick={() => setSelectedIncident(incident)}
+                          >
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <span className="text-lg">{getCategoryIcon(incident.category)}</span>
+                                <span className="text-lg">
+                                  {getCategoryIcon(incident.category)}
+                                </span>
                                 <div>
-                                  <p className="font-medium text-slate-900">{incident.title}</p>
-                                  <p className="text-xs text-slate-500">ID: {incident.id}</p>
+                                  <p className="font-medium text-slate-900">
+                                    {incident.title}
+                                  </p>
+                                  <p className="text-xs text-slate-500">
+                                    ID: {incident.id}
+                                  </p>
                                 </div>
                               </div>
                             </TableCell>
                             <TableCell>{incident.category}</TableCell>
-                            <TableCell className="max-w-32 truncate">{incident.location}</TableCell>
-                            <TableCell>{getStatusBadge(incident.status)}</TableCell>
-                            <TableCell>{getPriorityBadge(incident.priority)}</TableCell>
-                            <TableCell>{new Date(incident.submittedOn).toLocaleDateString()}</TableCell>
-                            <TableCell>{new Date(incident.lastUpdated).toLocaleDateString()}</TableCell>
+                            <TableCell className="max-w-32 truncate">
+                              {incident.location}
+                            </TableCell>
+                            <TableCell>
+                              {getStatusBadge(incident.status)}
+                            </TableCell>
+                            <TableCell>
+                              {getPriorityBadge(incident.priority)}
+                            </TableCell>
+                            <TableCell>
+                              {new Date(
+                                incident.submittedOn,
+                              ).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              {new Date(
+                                incident.lastUpdated,
+                              ).toLocaleDateString()}
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -800,9 +992,15 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
-                      <PaginationPrevious 
-                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer hover:bg-emerald-50'}
+                      <PaginationPrevious
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(1, prev - 1))
+                        }
+                        className={
+                          currentPage === 1
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer hover:bg-emerald-50"
+                        }
                       />
                     </PaginationItem>
                     {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
@@ -816,7 +1014,7 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                       } else {
                         pageNum = currentPage - 3 + i;
                       }
-                      
+
                       return (
                         <PaginationItem key={pageNum}>
                           <PaginationLink
@@ -830,9 +1028,17 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                       );
                     })}
                     <PaginationItem>
-                      <PaginationNext 
-                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer hover:bg-emerald-50'}
+                      <PaginationNext
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(totalPages, prev + 1),
+                          )
+                        }
+                        className={
+                          currentPage === totalPages
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer hover:bg-emerald-50"
+                        }
                       />
                     </PaginationItem>
                   </PaginationContent>
@@ -844,17 +1050,21 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
 
         {/* Incident Details Modal */}
         {selectedIncident && (
-          <Dialog open={!!selectedIncident} onOpenChange={() => setSelectedIncident(null)}>
+          <Dialog
+            open={!!selectedIncident}
+            onOpenChange={() => setSelectedIncident(null)}
+          >
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  {getCategoryIcon(selectedIncident.category)} {selectedIncident.title}
+                  {getCategoryIcon(selectedIncident.category)}{" "}
+                  {selectedIncident.title}
                 </DialogTitle>
                 <DialogDescription>
                   Incident Details • ID: {selectedIncident.id}
                 </DialogDescription>
               </DialogHeader>
-              
+
               <div className="space-y-6">
                 {/* Status and Priority */}
                 <div className="flex flex-wrap gap-3">
@@ -878,20 +1088,26 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                     <div className="flex items-center gap-2 text-sm">
                       <span>📍</span>
                       <span className="font-medium">Location:</span>
-                      <span className="text-slate-600">{selectedIncident.location}</span>
+                      <span className="text-slate-600">
+                        {selectedIncident.location}
+                      </span>
                     </div>
-                    
+
                     <div className="flex items-center gap-2 text-sm">
                       <span>🏷️</span>
                       <span className="font-medium">Category:</span>
-                      <span className="text-slate-600">{selectedIncident.category}</span>
+                      <span className="text-slate-600">
+                        {selectedIncident.category}
+                      </span>
                     </div>
 
                     {selectedIncident.contactInfo && (
                       <div className="flex items-center gap-2 text-sm">
                         <span>📞</span>
                         <span className="font-medium">Contact:</span>
-                        <span className="text-slate-600">{selectedIncident.contactInfo}</span>
+                        <span className="text-slate-600">
+                          {selectedIncident.contactInfo}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -901,22 +1117,26 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                       <span>📅</span>
                       <span className="font-medium">Submitted:</span>
                       <span className="text-slate-600">
-                        {new Date(selectedIncident.submittedOn).toLocaleDateString('en-KE', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
+                        {new Date(
+                          selectedIncident.submittedOn,
+                        ).toLocaleDateString("en-KE", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         })}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center gap-2 text-sm">
                       <span>🔄</span>
                       <span className="font-medium">Last Updated:</span>
                       <span className="text-slate-600">
-                        {new Date(selectedIncident.lastUpdated).toLocaleDateString('en-KE', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
+                        {new Date(
+                          selectedIncident.lastUpdated,
+                        ).toLocaleDateString("en-KE", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         })}
                       </span>
                     </div>
@@ -925,14 +1145,16 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                       <div className="flex items-center gap-2 text-sm">
                         <span>⏱️</span>
                         <span className="font-medium">Est. Resolution:</span>
-                        <span className="text-slate-600">{selectedIncident.estimatedResolution}</span>
+                        <span className="text-slate-600">
+                          {selectedIncident.estimatedResolution}
+                        </span>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                {user.role === 'staff' || user.role === 'admin' ? (
+                {user.role === "staff" || user.role === "admin" ? (
                   <div className="flex gap-2 pt-4 border-t">
                     <Button variant="outline" className="flex-1">
                       💬 Add Comment
@@ -944,7 +1166,8 @@ export function ReportedIncidents({ user, onNavigate, onLogout }: ReportedIncide
                 ) : (
                   <div className="bg-blue-50 p-3 rounded-[3rem]">
                     <p className="text-sm text-blue-800 flex items-center gap-1">
-                      ℹ️ <strong>Need to update this report?</strong> Contact your county office or use the chat assistant for help.
+                      ℹ️ <strong>Need to update this report?</strong> Contact
+                      your county office or use the chat assistant for help.
                     </p>
                   </div>
                 )}

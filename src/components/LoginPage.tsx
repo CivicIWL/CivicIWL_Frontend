@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { Building2 } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Building2 } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => void;
   onSwitchToSignUp: () => void;
+  isLoading?: boolean;
 }
 
 export function LoginPage({ onLogin, onSwitchToSignUp }: LoginPageProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,17 +75,24 @@ export function LoginPage({ onLogin, onSwitchToSignUp }: LoginPageProps) {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700"
+              >
                 Sign In
               </Button>
-              <Button type="button" variant="ghost" className="w-full text-blue-600 hover:text-blue-700">
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full text-blue-600 hover:text-blue-700"
+              >
                 Forgot password?
               </Button>
             </CardContent>
           </form>
           <CardFooter>
             <p className="text-center text-sm text-slate-600 w-full">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
                 onClick={onSwitchToSignUp}
                 className="text-blue-600 hover:text-blue-700 underline"
@@ -91,19 +106,32 @@ export function LoginPage({ onLogin, onSwitchToSignUp }: LoginPageProps) {
         {/* Demo Instructions */}
         <Card className="mt-6 border border-blue-200 bg-blue-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-blue-900">Demo Access</CardTitle>
+            <CardTitle className="text-base text-blue-900">
+              Demo Access
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-blue-700 space-y-2">
             <div>
-              <p><strong>Resident Portal:</strong> Use any email without "staff" or "admin"</p>
-              <p className="text-xs text-blue-600">Example: john.doe@email.com</p>
+              <p>
+                <strong>Resident Portal:</strong> Use any email without "staff"
+                or "admin"
+              </p>
+              <p className="text-xs text-blue-600">
+                Example: john.doe@email.com
+              </p>
             </div>
             <div>
-              <p><strong>Staff Portal:</strong> Use email containing "staff"</p>
-              <p className="text-xs text-blue-600">Example: sarah.staff@city.gov</p>
+              <p>
+                <strong>Staff Portal:</strong> Use email containing "staff"
+              </p>
+              <p className="text-xs text-blue-600">
+                Example: sarah.staff@city.gov
+              </p>
             </div>
             <div>
-              <p><strong>Admin Portal:</strong> Use email containing "admin"</p>
+              <p>
+                <strong>Admin Portal:</strong> Use email containing "admin"
+              </p>
               <p className="text-xs text-blue-600">Example: admin@city.gov</p>
             </div>
             <p className="text-xs text-blue-500 pt-2 border-t border-blue-200">

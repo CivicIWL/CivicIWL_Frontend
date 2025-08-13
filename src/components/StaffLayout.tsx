@@ -1,22 +1,36 @@
-import React from 'react';
-import { Home, FileText, Book, Users, Settings, LogOut, Bell, Menu } from 'lucide-react';
-import { Button } from './ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-import { Badge } from './ui/badge';
-import { StaffDashboard } from './StaffDashboard';
-import { StaffIncidentsPage } from './StaffIncidentsPage';
-import { StaffKnowledgeBasePage } from './StaffKnowledgeBasePage';
-import { StaffUsersPage } from './StaffUsersPage';
-import { StaffSettingsPage } from './StaffSettingsPage';
+import React from "react";
+import {
+  Home,
+  FileText,
+  Book,
+  Users,
+  Settings,
+  LogOut,
+  Bell,
+  Menu,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Badge } from "./ui/badge";
+import { StaffDashboard } from "./StaffDashboard";
+import { StaffIncidentsPage } from "./StaffIncidentsPage";
+import { StaffKnowledgeBasePage } from "./StaffKnowledgeBasePage";
+import { StaffUsersPage } from "./StaffUsersPage";
+import { StaffSettingsPage } from "./StaffSettingsPage";
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: 'resident' | 'staff' | 'admin';
+  role: "resident" | "staff" | "admin";
 };
 
-type StaffPage = 'staff-dashboard' | 'staff-incidents' | 'staff-knowledge' | 'staff-users' | 'staff-settings';
+type StaffPage =
+  | "staff-dashboard"
+  | "staff-incidents"
+  | "staff-knowledge"
+  | "staff-users"
+  | "staff-settings";
 
 interface StaffLayoutProps {
   user: User;
@@ -26,25 +40,30 @@ interface StaffLayoutProps {
 }
 
 const navigation = [
-  { id: 'staff-dashboard' as StaffPage, label: 'Dashboard', icon: Home },
-  { id: 'staff-incidents' as StaffPage, label: 'Incidents', icon: FileText },
-  { id: 'staff-knowledge' as StaffPage, label: 'Knowledge Base', icon: Book },
-  { id: 'staff-users' as StaffPage, label: 'Users', icon: Users },
-  { id: 'staff-settings' as StaffPage, label: 'Settings', icon: Settings },
+  { id: "staff-dashboard" as StaffPage, label: "Dashboard", icon: Home },
+  { id: "staff-incidents" as StaffPage, label: "Incidents", icon: FileText },
+  { id: "staff-knowledge" as StaffPage, label: "Knowledge Base", icon: Book },
+  { id: "staff-users" as StaffPage, label: "Users", icon: Users },
+  { id: "staff-settings" as StaffPage, label: "Settings", icon: Settings },
 ];
 
-export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLayoutProps) {
+export function StaffLayout({
+  user,
+  currentPage,
+  onNavigate,
+  onLogout,
+}: StaffLayoutProps) {
   const renderPage = () => {
     switch (currentPage) {
-      case 'staff-dashboard':
+      case "staff-dashboard":
         return <StaffDashboard user={user} />;
-      case 'staff-incidents':
+      case "staff-incidents":
         return <StaffIncidentsPage user={user} />;
-      case 'staff-knowledge':
+      case "staff-knowledge":
         return <StaffKnowledgeBasePage user={user} />;
-      case 'staff-users':
+      case "staff-users":
         return <StaffUsersPage user={user} />;
-      case 'staff-settings':
+      case "staff-settings":
         return <StaffSettingsPage user={user} />;
       default:
         return <StaffDashboard user={user} />;
@@ -78,9 +97,9 @@ export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLa
                 key={item.id}
                 variant={isActive ? "default" : "ghost"}
                 className={`w-full justify-start gap-3 ${
-                  isActive 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  isActive
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
                 onClick={() => onNavigate(item.id)}
               >
@@ -114,7 +133,8 @@ export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLa
                 <Menu className="w-4 h-4" />
               </Button>
               <h1 className="font-medium text-slate-900 capitalize">
-                {navigation.find(nav => nav.id === currentPage)?.label || 'Dashboard'}
+                {navigation.find((nav) => nav.id === currentPage)?.label ||
+                  "Dashboard"}
               </h1>
             </div>
 
@@ -128,8 +148,12 @@ export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLa
               {/* User Avatar */}
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-slate-900">{user.name}</p>
-                  <p className="text-xs text-slate-500 capitalize">{user.role}</p>
+                  <p className="text-sm font-medium text-slate-900">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-slate-500 capitalize">
+                    {user.role}
+                  </p>
                 </div>
                 <Avatar className="w-8 h-8">
                   <AvatarImage src="" />
@@ -143,9 +167,7 @@ export function StaffLayout({ user, currentPage, onNavigate, onLogout }: StaffLa
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6">
-          {renderPage()}
-        </main>
+        <main className="flex-1 p-6">{renderPage()}</main>
       </div>
     </div>
   );

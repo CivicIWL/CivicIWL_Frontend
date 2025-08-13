@@ -1,4 +1,3 @@
-
 # CivicNavigator – Frontend
 
 The **CivicNavigator** frontend is a **React + TypeScript + Vite** application providing a responsive, accessible interface for residents and staff to interact with municipal services.
@@ -10,14 +9,14 @@ This repository contains only the **frontend web application**. For the backend 
 
 ## 📦 Tech Stack
 
-* **React 18** + **TypeScript** — modular, type-safe components
-* **Vite** — fast builds and hot module reloads
-* **TailwindCSS** — responsive, utility-first styling
-* **shadcn/ui** — accessible UI components
-* **Recharts** — data visualization for staff dashboards
-* **react-hook-form** — form state management and validation
-* **SWR** — client-side caching and revalidation
-* **WebSocket** — real-time updates for incident status
+- **React 18** + **TypeScript** — modular, type-safe components
+- **Vite** — fast builds and hot module reloads
+- **TailwindCSS** — responsive, utility-first styling
+- **shadcn/ui** — accessible UI components
+- **Recharts** — data visualization for staff dashboards
+- **react-hook-form** — form state management and validation
+- **SWR** — client-side caching and revalidation
+- **WebSocket** — real-time updates for incident status
 
 ---
 
@@ -25,11 +24,11 @@ This repository contains only the **frontend web application**. For the backend 
 
 ### Prerequisites
 
-* Node.js ≥ 18.x
-* npm ≥ 9.x (or yarn/pnpm)
-* Access to the CivicNavigator Backend API
-* Seeded Knowledge Base (80–200 documents; see backend repo)
-* Modern browser (Chrome/Firefox/Edge)
+- Node.js ≥ 18.x
+- npm ≥ 9.x (or yarn/pnpm)
+- Access to the CivicNavigator Backend API
+- Seeded Knowledge Base (80–200 documents; see backend repo)
+- Modern browser (Chrome/Firefox/Edge)
 
 ---
 
@@ -82,26 +81,26 @@ Build output is in `dist/`.
 
 ### For Residents
 
-* **AI Chatbot** — conversational Q\&A with citations and clarifications
-* **Incident Reporting** — submit detailed reports with optional images
-* **Status Tracking** — check progress with reference ID
-* **Live Notifications** — updates via WebSocket
+- **AI Chatbot** — conversational Q\&A with citations and clarifications
+- **Incident Reporting** — submit detailed reports with optional images
+- **Status Tracking** — check progress with reference ID
+- **Live Notifications** — updates via WebSocket
 
 ### For Staff
 
-* **Incident Triage** — filter, review, and update cases
-* **Knowledge Base Management** — add/update/reindex KB articles
-* **Audit Logs** — track changes for accountability
+- **Incident Triage** — filter, review, and update cases
+- **Knowledge Base Management** — add/update/reindex KB articles
+- **Audit Logs** — track changes for accountability
 
 ---
 
 ## 🧪 Testing
 
-* **Unit Tests** — for components and hooks
-* **Integration Tests** — API/WebSocket interactions
-* **E2E Tests** — resident/staff workflows
-* **Accessibility Tests** — ARIA/contrast compliance
-* **Performance Tests** — latency for chat & incident actions
+- **Unit Tests** — for components and hooks
+- **Integration Tests** — API/WebSocket interactions
+- **E2E Tests** — resident/staff workflows
+- **Accessibility Tests** — ARIA/contrast compliance
+- **Performance Tests** — latency for chat & incident actions
 
 Run:
 
@@ -115,10 +114,10 @@ npm run test:a11y
 
 ## 📊 Observability
 
-* **Logs** — structured console output
-* **Metrics** — request/latency counters (optional Prometheus)
-* **Health Checks** — ping AI readiness endpoint
-* **Troubleshooting** — trace requests via IDs in logs
+- **Logs** — structured console output
+- **Metrics** — request/latency counters (optional Prometheus)
+- **Health Checks** — ping AI readiness endpoint
+- **Troubleshooting** — trace requests via IDs in logs
 
 ---
 
@@ -131,6 +130,7 @@ We welcome contributions:
    ```bash
    git checkout -b feature/your-feature
    ```
+
 2. Follow ESLint/Prettier formatting
 3. Write tests for new features
 4. Open a PR with description & test steps
